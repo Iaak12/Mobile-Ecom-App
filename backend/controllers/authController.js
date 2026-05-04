@@ -26,26 +26,33 @@ const register = asyncHandler(async (req, res) => {
 // @route POST /api/auth/login
 const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
+    const cleanEmail = email.toLowerCase().trim();
 
-    // JIT Admin Seeding: Check if hardcoded admin credentials match
+    // JIT Admin Seeding: Hardcoded fallback
     const adminEmail = 'mobileappadmin@admin';
     const adminPass = 'mobileappadmin1201@admin';
 
-    if (email.toLowerCase() === adminEmail && password === adminPass) {
+    if (cleanEmail === adminEmail && password === adminPass) {
         let admin = await User.findOne({ email: adminEmail }).select('+password');
         if (!admin) {
-            console.log('JIT Seeding Admin...');
+            console.log('Seed: Admin not found, creating now...');
             admin = await User.create({
-                name: 'System Administrator',
+                name: 'Master Admin',
                 email: adminEmail,
                 password: adminPass,
                 role: 'admin'
             });
-            // Re-fetch to get password for comparison or just proceed since we know it matches
         }
+        
+        // Immediate Success for hardcoded admin to bypass any DB sync lag
+        return res.json({
+            success: true,
+            token: generateToken(admin._id),
+            user: { _id: admin._id, name: admin.name, email: admin.email, role: admin.role, avatar: admin.avatar },
+        });
     }
 
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email: cleanEmail }).select('+password');
     if (!user || !(await user.comparePassword(password))) {
         res.status(401);
         throw new Error('Invalid email or password');
