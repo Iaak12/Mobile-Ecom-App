@@ -165,41 +165,41 @@ const Products = () => {
   }
 
   return (
-    <div className="space-y-12">
-      <div className="flex items-end justify-between">
-        <div>
-          <h1 className="text-5xl font-black tracking-tighter text-text-main">Global Inventory</h1>
-          <p className="text-text-muted font-bold mt-2 text-lg">Manage and monitor the core catalog of official merchandise.</p>
+    <div className="space-y-12 pb-12">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+        <div className="max-w-2xl">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-text-main uppercase leading-none">Global Inventory</h1>
+          <p className="text-text-muted font-bold mt-3 text-lg leading-relaxed">Manage and monitor the core catalog of official merchandise.</p>
         </div>
         <button 
           onClick={() => handleOpenModal()}
-          className="btn-primary px-10 py-5 rounded-[24px] flex items-center gap-4 text-xs font-black tracking-[0.2em] uppercase active:scale-95 shadow-2xl shadow-primary/30"
+          className="btn-primary px-10 py-5 rounded-[24px] flex items-center justify-center gap-4 text-xs font-black tracking-[0.2em] uppercase active:scale-95 shadow-2xl shadow-primary/30 w-full lg:w-auto"
         >
           <Plus size={22} />
           Register Product
         </button>
       </div>
 
-      <div className="bg-white rounded-[48px] overflow-hidden border border-border shadow-2xl shadow-slate-200/20">
-        <div className="p-10 border-b border-border bg-white flex items-center justify-between gap-10">
-            <div className="flex-1 max-w-xl relative group">
+      <div className="bg-white rounded-[40px] md:rounded-[48px] overflow-hidden border border-border shadow-2xl shadow-slate-200/20">
+        <div className="p-6 md:p-10 border-b border-border bg-white flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex-1 w-full max-w-xl relative group">
                 <Search size={22} className="absolute left-6 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" />
                 <input 
                     type="text" 
                     placeholder="Search by name, category or ID..." 
-                    className="w-full bg-surface border border-border rounded-[24px] pl-16 pr-8 py-5 text-sm font-bold outline-none input-focus transition-all placeholder:text-text-muted text-text-main"
+                    className="w-full bg-surface border border-border rounded-[24px] pl-16 pr-8 py-5 text-sm font-bold outline-none input-focus transition-all placeholder:text-text-muted text-text-main shadow-sm"
                 />
             </div>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-6 w-full md:w-auto justify-end">
                 <div className="px-6 py-3 bg-surface border border-border rounded-2xl flex items-center gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-                    <span className="text-[10px] font-black text-text-main tracking-[0.2em] uppercase">{products.length} Items Live</span>
+                    <span className="text-[10px] font-black text-text-main tracking-[0.2em] uppercase whitespace-nowrap">{products.length} Items Live</span>
                 </div>
             </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto scrollbar-hide">
+          <table className="w-full text-left border-collapse min-w-[1000px]">
             <thead>
               <tr className="border-b border-border bg-surface/30">
                 <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">Authentic Product</th>
@@ -209,34 +209,34 @@ const Products = () => {
                 <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">Management</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <tbody className="divide-y divide-border bg-white">
               {products.map((product) => (
                 <tr key={product._id} className="hover:bg-primary/5 transition-all group cursor-pointer">
                   <td className="px-10 py-8">
                     <div className="flex items-center gap-6">
-                      <div className="w-20 h-20 rounded-[28px] bg-surface border border-border overflow-hidden p-1.5 shadow-sm group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-primary/10 transition-all duration-500">
+                      <div className="w-20 h-20 rounded-[28px] bg-surface border border-border overflow-hidden p-1.5 shadow-sm group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-primary/10 transition-all duration-500 shrink-0">
                         <img src={product.images?.[0]?.url || 'https://via.placeholder.com/100'} alt={product.name} className="w-full h-full object-cover rounded-[22px]" />
                       </div>
-                      <div>
-                        <p className="text-lg font-black text-text-main group-hover:text-primary transition-colors tracking-tighter">{product.name}</p>
-                        <p className="text-[10px] text-text-muted font-black mt-1.5 tracking-[0.2em] uppercase">UID-{product._id.slice(-8).toUpperCase()}</p>
+                      <div className="min-w-0">
+                        <p className="text-lg font-black text-text-main group-hover:text-primary transition-colors tracking-tighter truncate">{product.name}</p>
+                        <p className="text-[10px] text-text-muted font-black mt-1.5 tracking-[0.2em] uppercase truncate">UID-{product._id.slice(-8).toUpperCase()}</p>
                       </div>
                     </div>
                   </td>
                   <td className="px-10 py-8">
-                    <span className="text-[10px] font-black text-primary flex items-center gap-2.5 bg-primary/5 border border-primary/10 px-5 py-2 rounded-xl w-fit tracking-widest uppercase">
+                    <span className="text-[10px] font-black text-primary flex items-center gap-2.5 bg-primary/5 border border-primary/10 px-5 py-2 rounded-xl w-fit tracking-widest uppercase whitespace-nowrap">
                         <Tag size={14} strokeWidth={2.5} />
                         {product.category?.name || 'GENERIC'}
                     </span>
                   </td>
                   <td className="px-10 py-8">
-                    <div className="flex items-center text-lg font-black text-text-main tracking-tighter">
+                    <div className="flex items-center text-lg font-black text-text-main tracking-tighter whitespace-nowrap">
                         <IndianRupee size={18} strokeWidth={2.5} className="text-primary mr-1" />
                         <span>{product.price.toLocaleString()}</span>
                     </div>
                   </td>
                   <td className="px-10 py-8">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 whitespace-nowrap">
                         <div className={`w-3 h-3 rounded-full ${product.stock > 10 ? 'bg-accent-success shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'bg-accent-warning shadow-[0_0_15px_rgba(245,158,11,0.5)]'}`}></div>
                         <span className="text-sm font-black text-text-main uppercase tracking-widest">{product.stock} Units</span>
                     </div>
@@ -245,13 +245,13 @@ const Products = () => {
                     <div className="flex items-center gap-4">
                       <button 
                         onClick={(e) => { e.stopPropagation(); handleOpenModal(product); }}
-                        className="w-12 h-12 flex items-center justify-center bg-white border border-border rounded-2xl text-text-muted hover:text-primary hover:border-primary hover:shadow-lg hover:shadow-primary/10 transition-all duration-300"
+                        className="w-12 h-12 flex items-center justify-center bg-white border border-border rounded-2xl text-text-muted hover:text-primary hover:border-primary hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 shadow-sm"
                       >
                         <Edit size={20} />
                       </button>
                       <button 
                         onClick={(e) => { e.stopPropagation(); handleDelete(product._id); }}
-                        className="w-12 h-12 flex items-center justify-center bg-accent-error/5 border border-accent-error/10 rounded-2xl text-accent-error hover:bg-accent-error hover:text-white hover:border-accent-error transition-all duration-300"
+                        className="w-12 h-12 flex items-center justify-center bg-accent-error/5 border border-accent-error/10 rounded-2xl text-accent-error hover:bg-accent-error hover:text-white hover:border-accent-error transition-all duration-300 shadow-sm"
                       >
                         <Trash2 size={20} />
                       </button>
@@ -259,12 +259,23 @@ const Products = () => {
                   </td>
                 </tr>
               ))}
+              {products.length === 0 && (
+                <tr>
+                    <td colSpan="5" className="px-10 py-32 text-center">
+                        <div className="flex flex-col items-center gap-4 opacity-20">
+                            <Box size={64} />
+                            <p className="text-xl font-black uppercase tracking-[0.2em]">No Merchandise Found</p>
+                        </div>
+                    </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
         
         <div className="p-10 border-t border-border bg-surface/30 flex justify-center">
-            <button className="text-[10px] font-black tracking-[0.3em] uppercase text-text-muted hover:text-primary transition-colors py-2">
+            <button className="text-[10px] font-black tracking-[0.3em] uppercase text-text-muted hover:text-primary transition-colors py-2 flex items-center gap-3">
+                <Box size={16} />
                 Load More Inventory Assets
             </button>
         </div>
@@ -272,28 +283,28 @@ const Products = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-8">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
           <div className="absolute inset-0 bg-text-main/10 backdrop-blur-3xl" onClick={() => setShowModal(false)}></div>
-          <div className="relative bg-white w-full max-w-3xl rounded-[56px] p-16 shadow-[0_64px_96px_-32px_rgba(0,0,0,0.3)] animate-in zoom-in-95 duration-500 max-h-[90vh] overflow-y-auto border border-white/20">
-            <div className="flex items-center justify-between mb-16">
+          <div className="relative bg-white w-full max-w-3xl rounded-[40px] md:rounded-[56px] p-8 md:p-16 shadow-[0_64px_96px_-32px_rgba(0,0,0,0.3)] animate-in zoom-in-95 duration-500 max-h-[95vh] overflow-y-auto border border-white/20">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 md:mb-16 gap-6">
                 <div>
-                    <h2 className="text-4xl font-black tracking-tighter">{editingProduct ? 'Edit Product' : 'New Registration'}</h2>
-                    <p className="text-text-muted font-bold mt-2 text-lg">{editingProduct ? 'Modify the details of this catalog item.' : 'Populate the fields to add merchandise to the inventory.'}</p>
+                    <h2 className="text-3xl md:text-4xl font-black tracking-tighter uppercase">{editingProduct ? 'Edit Product' : 'New Registration'}</h2>
+                    <p className="text-text-muted font-bold mt-2 text-base md:text-lg">{editingProduct ? 'Modify the details of this catalog item.' : 'Populate the fields to add merchandise to the inventory.'}</p>
                 </div>
-                <button onClick={() => setShowModal(false)} className="w-16 h-16 flex items-center justify-center bg-surface hover:bg-red-50 hover:text-primary rounded-[24px] border border-border hover:border-primary/20 transition-all duration-300">
-                    <X size={32} className="text-text-muted hover:text-primary transition-colors" />
+                <button onClick={() => setShowModal(false)} className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bg-surface hover:bg-red-50 hover:text-primary rounded-[20px] md:rounded-[24px] border border-border hover:border-primary/20 transition-all duration-300 shrink-0">
+                    <X size={28} className="text-text-muted hover:text-primary transition-colors" />
                 </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-10">
-              <div className="grid grid-cols-2 gap-8">
-                <div className="col-span-2 space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="col-span-1 md:col-span-2 space-y-3">
                   <label className="text-[10px] font-black text-text-muted tracking-[0.2em] uppercase ml-2">Official Product Designation</label>
                   <input 
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full bg-surface border border-border rounded-[24px] px-8 py-5 text-sm font-bold input-focus outline-none transition-all placeholder:text-text-muted" 
+                    className="w-full bg-surface border border-border rounded-[24px] px-8 py-5 text-sm font-bold input-focus outline-none transition-all placeholder:text-text-muted shadow-sm" 
                     placeholder="Enter identifying name"
                   />
                 </div>
@@ -307,7 +318,7 @@ const Products = () => {
                         type="number"
                         value={formData.price}
                         onChange={(e) => setFormData({...formData, price: e.target.value})}
-                        className="w-full bg-surface border border-border rounded-[24px] pl-14 pr-8 py-5 text-sm font-bold input-focus outline-none transition-all" 
+                        className="w-full bg-surface border border-border rounded-[24px] pl-14 pr-8 py-5 text-sm font-bold input-focus outline-none transition-all shadow-sm" 
                         placeholder="0.00"
                     />
                   </div>
@@ -315,17 +326,19 @@ const Products = () => {
 
                 <div className="space-y-3">
                   <label className="text-[10px] font-black text-text-muted tracking-[0.2em] uppercase ml-2">Classification Department</label>
-                  <select 
-                    required
-                    value={formData.category}
-                    onChange={(e) => setFormData({...formData, category: e.target.value})}
-                    className="w-full bg-surface border border-border rounded-[24px] px-8 py-5 text-sm font-bold input-focus outline-none transition-all cursor-pointer appearance-none uppercase tracking-widest text-[10px]"
-                  >
-                    <option value="">SELECT DEPARTMENT</option>
-                    {categories.map(cat => (
-                      <option key={cat._id} value={cat._id}>{cat.name}</option>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <select 
+                        required
+                        value={formData.category}
+                        onChange={(e) => setFormData({...formData, category: e.target.value})}
+                        className="w-full bg-surface border border-border rounded-[24px] px-8 py-5 text-sm font-bold input-focus outline-none transition-all cursor-pointer appearance-none uppercase tracking-widest text-[10px] shadow-sm"
+                    >
+                        <option value="">SELECT DEPARTMENT</option>
+                        {categories.map(cat => (
+                        <option key={cat._id} value={cat._id}>{cat.name}</option>
+                        ))}
+                    </select>
+                  </div>
                 </div>
 
                 <div className="space-y-3">
@@ -333,7 +346,7 @@ const Products = () => {
                   <input 
                     value={formData.brand}
                     onChange={(e) => setFormData({...formData, brand: e.target.value})}
-                    className="w-full bg-surface border border-border rounded-[24px] px-8 py-5 text-sm font-bold input-focus outline-none transition-all" 
+                    className="w-full bg-surface border border-border rounded-[24px] px-8 py-5 text-sm font-bold input-focus outline-none transition-all shadow-sm" 
                     placeholder="e.g. Authentic"
                   />
                 </div>
@@ -345,23 +358,23 @@ const Products = () => {
                     type="number"
                     value={formData.stock}
                     onChange={(e) => setFormData({...formData, stock: e.target.value})}
-                    className="w-full bg-surface border border-border rounded-[24px] px-8 py-5 text-sm font-bold input-focus outline-none transition-all" 
+                    className="w-full bg-surface border border-border rounded-[24px] px-8 py-5 text-sm font-bold input-focus outline-none transition-all shadow-sm" 
                     placeholder="0"
                   />
                 </div>
 
-                <div className="col-span-2 space-y-3">
+                <div className="col-span-1 md:col-span-2 space-y-3">
                   <label className="text-[10px] font-black text-text-muted tracking-[0.2em] uppercase ml-2">Catalog Narrative / Details</label>
                   <textarea 
                     required
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
-                    className="w-full bg-surface border border-border rounded-[32px] px-8 py-6 text-sm font-bold input-focus outline-none min-h-[160px] transition-all" 
+                    className="w-full bg-surface border border-border rounded-[32px] px-8 py-6 text-sm font-bold input-focus outline-none min-h-[160px] transition-all shadow-sm" 
                     placeholder="Provide professional product details"
                   />
                 </div>
 
-                <div className="col-span-2 space-y-3">
+                <div className="col-span-1 md:col-span-2 space-y-3">
                   <label className="text-[10px] font-black text-text-muted tracking-[0.2em] uppercase ml-2">Visual Asset Acquisition</label>
                   <div className="mt-1 flex justify-center px-10 py-16 border-4 border-surface border-dashed rounded-[48px] hover:border-primary/20 transition-all bg-surface/50 group cursor-pointer relative overflow-hidden">
                     <input type="file" multiple className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={handleFileChange} accept="image/*" />
@@ -380,7 +393,7 @@ const Products = () => {
                 </div>
 
                 {previewImages.length > 0 && (
-                  <div className="col-span-2 grid grid-cols-4 gap-6 mt-4">
+                  <div className="col-span-1 md:col-span-2 grid grid-cols-2 sm:grid-cols-4 gap-6 mt-4">
                     {previewImages.map((url, i) => (
                       <div key={i} className="relative group aspect-square rounded-[24px] overflow-hidden border-4 border-surface shadow-xl shadow-slate-200/50">
                         <img src={url} alt="Preview" className="w-full h-full object-cover" />
@@ -398,7 +411,7 @@ const Products = () => {
                   </div>
                 )}
 
-                <div className="col-span-2 flex items-center gap-4 px-2 py-4 bg-surface rounded-[24px] border border-border cursor-pointer group hover:border-primary/20 transition-all">
+                <div className="col-span-1 md:col-span-2 flex items-center gap-4 px-6 py-5 bg-surface rounded-[24px] border border-border cursor-pointer group hover:border-primary/20 transition-all shadow-sm">
                   <div className="relative flex items-center">
                     <input 
                         type="checkbox" 
@@ -412,7 +425,7 @@ const Products = () => {
                 </div>
               </div>
               
-              <div className="pt-10 flex gap-8">
+              <div className="pt-10 flex flex-col md:flex-row gap-6 md:gap-8">
                 <button 
                     type="button"
                     onClick={() => setShowModal(false)}

@@ -84,19 +84,19 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-12">
-      <div className="flex items-end justify-between">
-        <div>
-          <h1 className="text-5xl font-black tracking-tighter text-text-main">Global Overview</h1>
-          <p className="text-text-muted font-bold mt-2 text-lg">Real-time performance analytics from your core database.</p>
+    <div className="space-y-12 pb-12">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+        <div className="max-w-2xl">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-text-main uppercase leading-none">Global Overview</h1>
+          <p className="text-text-muted font-bold mt-3 text-lg leading-relaxed">Real-time performance analytics from your core database.</p>
         </div>
-        <div className="bg-white px-6 py-3 rounded-2xl border border-border flex items-center gap-4 shadow-sm">
+        <div className="bg-white px-8 py-4 rounded-2xl border border-border flex items-center gap-4 shadow-sm w-fit">
             <div className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse shadow-[0_0_10px_rgba(225,29,72,0.5)]"></div>
             <span className="text-xs font-black tracking-widest uppercase text-text-main">Live Status</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
         <StatCard 
           icon={DollarSign} 
           label="GROSS REVENUE" 
@@ -123,19 +123,19 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="grid grid-cols-12 gap-10">
-        <div className="col-span-8 bg-white p-10 rounded-[48px] border border-border shadow-2xl shadow-slate-200/20">
-          <div className="flex items-center justify-between mb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10">
+        <div className="lg:col-span-8 bg-white p-6 md:p-10 rounded-[32px] md:rounded-[48px] border border-border shadow-2xl shadow-slate-200/20">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-6">
             <div>
-                <h2 className="text-2xl font-black tracking-tighter">Revenue Trajectory</h2>
+                <h2 className="text-2xl font-black tracking-tighter uppercase">Revenue Trajectory</h2>
                 <p className="text-xs font-bold text-text-muted uppercase tracking-widest mt-1">Growth analysis over time</p>
             </div>
-            <select className="bg-surface border border-border text-[10px] font-black px-5 py-3 rounded-xl outline-none cursor-pointer tracking-widest uppercase hover:border-primary transition-all">
+            <select className="bg-surface border border-border text-[10px] font-black px-6 py-3.5 rounded-xl outline-none cursor-pointer tracking-widest uppercase hover:border-primary transition-all w-fit shadow-sm">
               <option>WEEKLY ANALYSIS</option>
               <option>MONTHLY ANALYSIS</option>
             </select>
           </div>
-          <div className="h-[400px] w-full">
+          <div className="h-[300px] md:h-[400px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
                 <defs>
@@ -157,25 +157,25 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="col-span-4 bg-white p-10 rounded-[48px] border border-border shadow-2xl shadow-slate-200/20">
-          <h2 className="text-2xl font-black tracking-tighter mb-10">Recent Pulse</h2>
-          <div className="space-y-6">
+        <div className="lg:col-span-4 bg-white p-6 md:p-10 rounded-[32px] md:rounded-[48px] border border-border shadow-2xl shadow-slate-200/20">
+          <h2 className="text-2xl font-black tracking-tighter mb-8 uppercase">Recent Pulse</h2>
+          <div className="space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex gap-5 items-center group cursor-pointer p-2 rounded-2xl hover:bg-surface transition-all">
-                <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center shrink-0 border border-primary/5 group-hover:bg-primary/10 transition-colors">
-                  <ShoppingBag size={24} className="text-primary" />
+              <div key={i} className="flex gap-5 items-center group cursor-pointer p-3 rounded-2xl hover:bg-surface transition-all border border-transparent hover:border-border shadow-sm hover:shadow-none">
+                <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center shrink-0 border border-primary/5 group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm">
+                  <ShoppingBag size={24} strokeWidth={2.5} />
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-black text-text-main">New Order Confirmed</p>
-                  <p className="text-[10px] text-text-muted font-black uppercase tracking-widest mt-1">ORD-79{i}22 • 2m ago</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-black text-text-main group-hover:text-primary transition-colors truncate">New Order Confirmed</p>
+                  <p className="text-[10px] text-text-muted font-black uppercase tracking-widest mt-1 truncate">ORD-79{i}22 • 2m ago</p>
                 </div>
-                <div className="w-10 h-10 flex items-center justify-center bg-surface rounded-xl border border-border text-text-muted group-hover:text-primary group-hover:border-primary/20 transition-all">
+                <div className="w-10 h-10 flex items-center justify-center bg-surface rounded-xl border border-border text-text-muted group-hover:text-primary group-hover:border-primary/20 transition-all duration-300 shrink-0">
                     <ArrowUpRight size={20} />
                 </div>
               </div>
             ))}
           </div>
-          <button className="w-full mt-10 py-5 bg-surface border border-border rounded-2xl text-[10px] font-black tracking-[0.2em] uppercase hover:bg-primary hover:text-white hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-500">
+          <button className="w-full mt-10 py-5 bg-surface border border-border rounded-2xl text-[10px] font-black tracking-[0.2em] uppercase hover:bg-primary hover:text-white hover:border-primary hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 shadow-sm">
               View All Activities
           </button>
         </div>

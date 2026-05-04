@@ -67,24 +67,24 @@ const Users = () => {
 
   return (
     <div className="space-y-12">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-5xl font-black tracking-tighter text-text-main">User Registry</h1>
-          <p className="text-text-muted font-bold mt-2 text-lg">Manage official customer accounts and permissions.</p>
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+        <div className="max-w-2xl">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-text-main uppercase leading-none">User Registry</h1>
+          <p className="text-text-muted font-bold mt-3 text-lg leading-relaxed">Manage official customer accounts and permissions.</p>
         </div>
-        <button className="btn-primary px-10 py-5 rounded-[24px] flex items-center gap-4 text-xs font-black tracking-[0.2em] uppercase active:scale-95 shadow-2xl shadow-primary/30">
+        <button className="btn-primary px-10 py-5 rounded-[24px] flex items-center justify-center gap-4 text-xs font-black tracking-[0.2em] uppercase active:scale-95 shadow-2xl shadow-primary/30 w-full lg:w-auto">
           <UserPlus size={22} />
           Invite Associate
         </button>
       </div>
 
-      <div className="grid grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {users.map((user) => (
-          <div key={user._id} className="bg-white p-10 rounded-[48px] group relative overflow-hidden transition-all duration-500 border border-border hover:shadow-2xl hover:shadow-slate-200/50 hover:-translate-y-1">
-            <div className="absolute top-4 right-4">
+          <div key={user._id} className="bg-white p-10 rounded-[48px] group relative overflow-hidden transition-all duration-500 border border-border hover:shadow-2xl hover:shadow-slate-200/50 hover:-translate-y-1 shadow-sm">
+            <div className="absolute top-6 right-6">
                 <button 
                   onClick={() => deleteUser(user._id)}
-                  className="w-12 h-12 bg-accent-error/5 text-accent-error rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:bg-accent-error hover:text-white flex items-center justify-center border border-accent-error/10"
+                  className="w-12 h-12 bg-accent-error/5 text-accent-error rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:bg-accent-error hover:text-white flex items-center justify-center border border-accent-error/10 shadow-sm"
                 >
                   <Trash2 size={20} />
                 </button>
@@ -100,19 +100,19 @@ const Users = () => {
               </div>
 
               <div className="space-y-3 mb-10 w-full">
-                <h3 className="text-2xl font-black text-text-main flex items-center justify-center gap-3 tracking-tighter">
+                <h3 className="text-2xl font-black text-text-main flex items-center justify-center gap-3 tracking-tighter truncate px-4">
                   {user.name}
                   {user.role === 'admin' && (
-                    <div className="p-1.5 bg-primary/10 rounded-xl">
+                    <div className="p-1.5 bg-primary/10 rounded-xl shrink-0">
                       <ShieldCheck size={20} className="text-primary" />
                     </div>
                   )}
                 </h3>
-                <div className="flex items-center justify-center gap-3 text-text-muted font-black text-[10px] uppercase tracking-widest bg-surface py-2 px-6 rounded-2xl w-fit mx-auto border border-border">
-                  <Mail size={16} className="text-primary" />
-                  {user.email}
+                <div className="flex items-center justify-center gap-3 text-text-muted font-black text-[10px] uppercase tracking-widest bg-surface py-3 px-6 rounded-2xl w-fit mx-auto border border-border shadow-sm truncate max-w-full">
+                  <Mail size={16} className="text-primary shrink-0" />
+                  <span className="truncate">{user.email}</span>
                 </div>
-                <div className="flex items-center justify-center gap-2 text-[10px] text-text-muted font-black uppercase tracking-[0.2em] mt-6">
+                <div className="flex items-center justify-center gap-2 text-[10px] text-text-muted font-black uppercase tracking-[0.2em] mt-8 opacity-60">
                   <Calendar size={16} />
                   Joined {new Date(user.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
                 </div>
@@ -122,7 +122,7 @@ const Users = () => {
                 onClick={() => toggleAdmin(user._id, user.role)}
                 className={`w-full py-5 rounded-[24px] text-[10px] font-black tracking-[0.2em] uppercase transition-all duration-500 border ${
                   user.role === 'admin' 
-                  ? 'bg-white border-border text-text-muted hover:border-primary hover:text-primary hover:bg-primary/5' 
+                  ? 'bg-white border-border text-text-muted hover:border-primary hover:text-primary hover:bg-primary/5 shadow-sm' 
                   : 'bg-primary text-white border-primary shadow-xl shadow-primary/20 hover:scale-[1.02]'
                 }`}
               >

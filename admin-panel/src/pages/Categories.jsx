@@ -125,79 +125,82 @@ const Categories = () => {
   }
 
   return (
-    <div className="space-y-10">
-      <div className="flex items-center justify-between">
+    <div className="space-y-12">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-black tracking-tighter text-text-main">Category Taxonomy</h1>
-          <p className="text-text-muted font-semibold mt-1">Organize products into logical classifications for better navigation.</p>
+          <h1 className="text-5xl font-black tracking-tighter text-text-main uppercase">Taxonomy Core</h1>
+          <p className="text-text-muted font-bold mt-2 text-lg">Organize products into logical classifications.</p>
         </div>
         <button 
           onClick={() => handleOpenModal()}
-          className="bg-primary text-white px-8 py-3.5 rounded-2xl flex items-center gap-3 text-sm font-black tracking-widest uppercase hover:shadow-xl hover:shadow-primary/20 transition-all active:scale-95"
+          className="btn-primary px-10 py-5 rounded-[24px] flex items-center gap-4 text-xs font-black tracking-[0.2em] uppercase active:scale-95 shadow-2xl shadow-primary/30"
         >
-          <Plus size={20} />
+          <Plus size={22} />
           Create Category
         </button>
       </div>
 
-      <div className="glass rounded-[40px] overflow-hidden border-none shadow-2xl shadow-slate-200/50">
-        <div className="p-8 border-b border-border bg-surface flex items-center justify-between">
-            <div className="flex-1 max-w-md relative">
-                <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
+      <div className="bg-white rounded-[48px] overflow-hidden border border-border shadow-2xl shadow-slate-200/20">
+        <div className="p-10 border-b border-border bg-white flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex-1 w-full max-w-xl relative group">
+                <Search size={22} className="absolute left-6 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" />
                 <input 
                     type="text" 
-                    placeholder="Search categories..." 
-                    className="w-full bg-background border border-border rounded-2xl pl-12 pr-6 py-3 text-sm font-bold outline-none focus:border-primary transition-all placeholder:text-text-muted text-text-main"
+                    placeholder="Search classifications..." 
+                    className="w-full bg-surface border border-border rounded-[24px] pl-16 pr-8 py-5 text-sm font-bold outline-none input-focus transition-all placeholder:text-text-muted text-text-main"
                 />
             </div>
-            <div className="flex items-center gap-4">
-                <span className="text-xs font-black text-text-muted tracking-widest uppercase">Total: {categories.length} Categories</span>
+            <div className="flex items-center gap-6">
+                <div className="px-6 py-3 bg-surface border border-border rounded-2xl flex items-center gap-3">
+                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                    <span className="text-[10px] font-black text-text-main tracking-[0.2em] uppercase">{categories.length} Nodes Active</span>
+                </div>
             </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
-              <tr className="border-b border-border bg-background/50">
-                <th className="px-8 py-5 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Visual</th>
-                <th className="px-8 py-5 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Category Name</th>
-                <th className="px-8 py-5 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Slug</th>
-                <th className="px-8 py-5 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Description</th>
-                <th className="px-8 py-5 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Actions</th>
+              <tr className="border-b border-border bg-surface/30">
+                <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">Visual Identity</th>
+                <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">Designation</th>
+                <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">System Slug</th>
+                <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">Narrative</th>
+                <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">Management</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {categories.map((category) => (
-                <tr key={category._id} className="hover:bg-primary/5 transition-all group">
-                  <td className="px-8 py-6">
-                    <div className="w-12 h-12 rounded-xl bg-background border border-border overflow-hidden p-1">
-                      <img src={category.image || 'https://via.placeholder.com/100'} alt={category.name} className="w-full h-full object-cover rounded-lg" />
+                <tr key={category._id} className="hover:bg-primary/5 transition-all group cursor-pointer">
+                  <td className="px-10 py-8">
+                    <div className="w-20 h-20 rounded-[28px] bg-surface border border-border overflow-hidden p-1.5 shadow-sm group-hover:scale-105 transition-all duration-500">
+                      <img src={category.image || 'https://via.placeholder.com/100'} alt={category.name} className="w-full h-full object-cover rounded-[22px]" />
                     </div>
                   </td>
-                  <td className="px-8 py-6">
+                  <td className="px-10 py-8">
+                    <span className="text-lg font-black text-text-main group-hover:text-primary transition-colors tracking-tighter uppercase">{category.name}</span>
+                  </td>
+                  <td className="px-10 py-8">
+                    <span className="text-[10px] font-black text-text-muted font-mono tracking-widest bg-surface px-4 py-2 rounded-xl border border-border">
+                        {category.slug}
+                    </span>
+                  </td>
+                  <td className="px-10 py-8 max-w-xs">
+                    <p className="text-sm font-bold text-text-muted line-clamp-2">{category.description || 'No descriptive narrative provided.'}</p>
+                  </td>
+                  <td className="px-10 py-8">
                     <div className="flex items-center gap-4">
-                      <span className="text-base font-black text-text-main uppercase tracking-tight">{category.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-8 py-6">
-                    <span className="text-xs font-bold text-text-muted font-mono">{category.slug}</span>
-                  </td>
-                  <td className="px-8 py-6 max-w-xs">
-                    <p className="text-sm font-medium text-text-muted truncate">{category.description || 'No description provided'}</p>
-                  </td>
-                  <td className="px-8 py-6">
-                    <div className="flex items-center gap-3">
                       <button 
-                        onClick={() => handleOpenModal(category)}
-                        className="p-3 bg-background border border-border rounded-xl text-text-muted hover:text-primary hover:border-primary transition-all"
+                        onClick={(e) => { e.stopPropagation(); handleOpenModal(category); }}
+                        className="w-12 h-12 flex items-center justify-center bg-white border border-border rounded-2xl text-text-muted hover:text-primary hover:border-primary hover:shadow-lg hover:shadow-primary/10 transition-all duration-300"
                       >
-                        <Edit size={18} />
+                        <Edit size={20} />
                       </button>
                       <button 
-                        onClick={() => handleDelete(category._id)}
-                        className="p-3 bg-red-50 border border-red-100 rounded-xl text-primary hover:bg-primary hover:text-white hover:border-primary transition-all"
+                        onClick={(e) => { e.stopPropagation(); handleDelete(category._id); }}
+                        className="w-12 h-12 flex items-center justify-center bg-accent-error/5 border border-accent-error/10 rounded-2xl text-accent-error hover:bg-accent-error hover:text-white hover:border-accent-error transition-all duration-300"
                       >
-                        <Trash2 size={18} />
+                        <Trash2 size={20} />
                       </button>
                     </div>
                   </td>
@@ -206,53 +209,57 @@ const Categories = () => {
             </tbody>
           </table>
         </div>
+        
+        <div className="p-10 border-t border-border bg-surface/30 flex justify-center">
+            <button className="text-[10px] font-black tracking-[0.3em] uppercase text-text-muted hover:text-primary transition-colors py-2">
+                Expand Taxonomy Hierarchy
+            </button>
+        </div>
       </div>
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-          <div className="absolute inset-0 bg-text-main/20 backdrop-blur-xl" onClick={() => setShowModal(false)}></div>
-          <div className="relative bg-surface w-full max-w-lg rounded-[40px] p-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] animate-in zoom-in-95 duration-300 border-none">
-            <div className="flex items-center justify-between mb-10">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-8">
+          <div className="absolute inset-0 bg-text-main/10 backdrop-blur-3xl" onClick={() => setShowModal(false)}></div>
+          <div className="relative bg-white w-full max-w-xl rounded-[56px] p-16 shadow-[0_64px_96px_-32px_rgba(0,0,0,0.3)] animate-in zoom-in-95 duration-500 border border-white/20">
+            <div className="flex items-center justify-between mb-16">
                 <div>
-                    <h2 className="text-3xl font-black tracking-tighter">{editingCategory ? 'Edit Category' : 'New Category'}</h2>
-                    <p className="text-text-muted font-bold mt-1">Define classification parameters.</p>
+                    <h2 className="text-4xl font-black tracking-tighter">{editingCategory ? 'Edit Node' : 'New Node'}</h2>
+                    <p className="text-text-muted font-bold mt-2 text-lg">Define classification parameters.</p>
                 </div>
-                <button onClick={() => setShowModal(false)} className="p-3 hover:bg-background rounded-2xl transition-colors">
-                    <X size={24} className="text-text-muted" />
+                <button onClick={() => setShowModal(false)} className="w-16 h-16 flex items-center justify-center bg-surface hover:bg-red-50 hover:text-primary rounded-[24px] border border-border hover:border-primary/20 transition-all duration-300">
+                    <X size={32} className="text-text-muted hover:text-primary transition-colors" />
                 </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="space-y-6">
-                <div>
-                  <label className="text-xs font-black text-text-muted tracking-widest uppercase block mb-3 ml-1">Category Name</label>
+            <form onSubmit={handleSubmit} className="space-y-10">
+              <div className="space-y-8">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-text-muted tracking-[0.2em] uppercase ml-2">Category Designation</label>
                   <input 
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full bg-background border border-border rounded-2xl px-5 py-4 text-sm font-bold focus:border-primary outline-none transition-all" 
+                    className="w-full bg-surface border border-border rounded-[24px] px-8 py-5 text-sm font-bold input-focus outline-none transition-all placeholder:text-text-muted" 
                     placeholder="e.g. Footwear"
                   />
                 </div>
 
-                <div>
-                  <label className="text-xs font-black text-text-muted tracking-widest uppercase block mb-3 ml-1">Visual Identity</label>
-                  <div className="flex items-center gap-6">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-text-muted tracking-[0.2em] uppercase ml-2">Visual Representation</label>
+                  <div className="flex items-center gap-8">
                     {previewImage && (
-                      <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-border p-1 bg-background">
-                        <img src={previewImage} alt="Preview" className="w-full h-full object-cover rounded-xl" />
+                      <div className="w-32 h-32 rounded-[32px] overflow-hidden border-4 border-surface shadow-xl p-1 bg-white shrink-0">
+                        <img src={previewImage} alt="Preview" className="w-full h-full object-cover rounded-[24px]" />
                       </div>
                     )}
                     <div className="flex-1">
-                      <div className="mt-1 flex justify-center px-6 pt-6 pb-6 border-2 border-border border-dashed rounded-2xl hover:border-primary/20 transition-all bg-background/50 group">
-                        <div className="space-y-2 text-center">
-                          <Upload className="h-6 w-6 text-primary mx-auto" />
-                          <div className="flex flex-col text-xs text-text-muted items-center">
-                            <label className="relative cursor-pointer rounded-md font-black text-primary hover:text-primary/80 focus-within:outline-none tracking-widest uppercase">
-                              <span>Upload Image</span>
-                              <input type="file" className="sr-only" onChange={handleFileChange} accept="image/*" />
-                            </label>
+                      <div className="flex justify-center px-8 py-10 border-4 border-surface border-dashed rounded-[32px] hover:border-primary/20 transition-all bg-surface/50 group cursor-pointer relative overflow-hidden">
+                        <input type="file" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={handleFileChange} accept="image/*" />
+                        <div className="space-y-3 text-center">
+                          <Upload className="h-8 w-8 text-primary mx-auto group-hover:scale-110 transition-transform" />
+                          <div className="flex flex-col text-[10px] text-text-muted items-center font-black uppercase tracking-widest">
+                            <span>Upload Hero Asset</span>
                           </div>
                         </div>
                       </div>
@@ -260,36 +267,36 @@ const Categories = () => {
                   </div>
                 </div>
 
-                <div>
-                  <label className="text-xs font-black text-text-muted tracking-widest uppercase block mb-3 ml-1">Description</label>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-text-muted tracking-[0.2em] uppercase ml-2">Narrative Context</label>
                   <textarea 
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
-                    className="w-full bg-background border border-border rounded-2xl px-5 py-4 text-sm font-bold focus:border-primary outline-none min-h-[120px] transition-all" 
-                    placeholder="Describe this category..."
+                    className="w-full bg-surface border border-border rounded-[32px] px-8 py-6 text-sm font-bold input-focus outline-none min-h-[160px] transition-all placeholder:text-text-muted" 
+                    placeholder="Describe this category classification..."
                   />
                 </div>
               </div>
               
-              <div className="pt-4 flex gap-5">
+              <div className="pt-6 flex gap-8">
                 <button 
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="flex-1 bg-background border border-border text-text-muted font-black tracking-widest uppercase py-4 rounded-2xl hover:bg-red-50 hover:text-primary transition-all"
+                    className="flex-1 bg-surface border border-border text-text-muted font-black tracking-[0.2em] uppercase py-6 rounded-[24px] hover:bg-red-50 hover:text-primary transition-all duration-500"
                 >
-                    Cancel
+                    Dismiss
                 </button>
                 <button 
                     type="submit"
                     disabled={loading}
-                    className="flex-1 bg-primary text-white font-black tracking-widest uppercase py-4 rounded-2xl shadow-xl shadow-primary/20 flex justify-center items-center gap-3 hover:scale-[1.02] active:scale-95 transition-all"
+                    className="flex-1 btn-primary text-white font-black tracking-[0.2em] uppercase py-6 rounded-[24px] shadow-2xl shadow-primary/30 flex justify-center items-center gap-4 active:scale-95 transition-all duration-500"
                 >
                     {loading ? (
-                      <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <div className="w-7 h-7 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
                     ) : (
                       <>
-                        <Layers size={20} />
-                        {editingCategory ? 'Update' : 'Create'}
+                        <Layers size={24} />
+                        {editingCategory ? 'Finalize Changes' : 'Initialize Node'}
                       </>
                     )}
                 </button>
