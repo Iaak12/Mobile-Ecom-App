@@ -6,6 +6,13 @@ import Constants from 'expo-constants';
 
 // Auto-detect correct base URL based on platform
 const getBaseURL = () => {
+    // Priority 0: Environment variable (EXPO_PUBLIC_ prefix is auto-loaded by Expo)
+    const envURL = process.env.EXPO_PUBLIC_API_URL;
+    if (envURL) {
+        console.log('[Axios] Using Environment API:', envURL);
+        return envURL;
+    }
+
     // Priority 1: Production URL from app.json extra (checks multiple paths)
     const productionURL = Constants.expoConfig?.extra?.apiUrl || Constants.expoConfig?.extra?.eas?.apiUrl;
     
