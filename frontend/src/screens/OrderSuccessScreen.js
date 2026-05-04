@@ -1,48 +1,85 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CheckCircle, Package, ArrowRight, Home } from 'lucide-react-native';
+
+const PRIMARY = '#E11D48';
 
 export default function OrderSuccessScreen({ navigation, route }) {
     const { orderId } = route.params || {};
+    const scaleAnim = useRef(new Animated.Value(0)).current;
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.sequence([
+            Animated.spring(scaleAnim, { toValue: 1, tension: 40, friction: 6, useNativeDriver: true }),
+            Animated.timing(fadeAnim, { toValue: 1, duration: 400, useNativeDriver: true }),
+        ]).start();
+    }, []);
 
     return (
         <SafeAreaView style={styles.safe}>
+            <StatusBar barStyle="dark-content" />
             <View style={styles.container}>
-                {/* Success Animation (emoji-based) */}
-                <View style={styles.iconCircle}>
-                    <Text style={styles.icon}>🎉</Text>
-                </View>
 
-                <Text style={styles.title}>Order Placed!</Text>
-                <Text style={styles.subtitle}>
-                    Your order has been successfully placed and is being processed. You'll receive updates soon.
-                </Text>
-
-                {orderId && (
-                    <View style={styles.orderIdBox}>
-                        <Text style={styles.orderIdLabel}>ORDER ID</Text>
-                        <Text style={styles.orderId}>#{orderId.slice(-8).toUpperCase()}</Text>
+                {/* Animated Check Icon */}
+                <Animated.View style={[styles.iconRing, { transform: [{ scale: scaleAnim }] }]}>
+                    <View style={styles.iconInner}>
+                        <CheckCircle size={52} color={PRIMARY} strokeWidth={2} />
                     </View>
-                )}
+                </Animated.View>
 
-                <View style={styles.infoRow}>
-                    <View style={styles.infoCard}>
-                        <Text style={styles.infoIcon}>📧</Text>
-                        <Text style={styles.infoText}>Confirmation sent to your email</Text>
+                <Animated.View style={{ opacity: fadeAnim, alignItems: 'center', width: '100%' }}>
+                    <Text style={styles.successLabel}>ORDER CONFIRMED</Text>
+                    <Text style={styles.title}>You're all set! 🎉</Text>
+                    <Text style={styles.subtitle}>
+                        Your order has been placed successfully and is now being processed. We'll notify you when it ships.
+                    </Text>
+
+                    {/* Order ID */}
+                    {orderId && (
+                        <View style={styles.orderIdBox}>
+                            <Text style={styles.orderIdLabel}>ORDER ID</Text>
+                            <Text style={styles.orderId}>#{orderId.slice(-8).toUpperCase()}</Text>
+                            <View style={styles.orderIdLine} />
+                            <Text style={styles.orderIdHint}>Save this for tracking</Text>
+                        </View>
+                    )}
+
+                    {/* Info Cards */}
+                    <View style={styles.infoRow}>
+                        {[
+                            { emoji: '📧', text: 'Confirmation\nvia email' },
+                            { emoji: '🚚', text: '3-5 days\ndelivery' },
+                            { emoji: '📦', text: 'Track in\nMy Orders' },
+                        ].map((item, i) => (
+                            <View key={i} style={styles.infoCard}>
+                                <Text style={styles.infoEmoji}>{item.emoji}</Text>
+                                <Text style={styles.infoText}>{item.text}</Text>
+                            </View>
+                        ))}
                     </View>
-                    <View style={styles.infoCard}>
-                        <Text style={styles.infoIcon}>📱</Text>
-                        <Text style={styles.infoText}>Track via My Orders</Text>
-                    </View>
-                </View>
 
-                <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('MyOrders')}>
-                    <Text style={styles.btnText}>📦 Track My Order</Text>
-                </TouchableOpacity>
+                    {/* CTA Buttons */}
+                    <TouchableOpacity
+                        style={styles.primaryBtn}
+                        onPress={() => navigation.navigate('MyOrders')}
+                        activeOpacity={0.85}
+                    >
+                        <Package size={20} color="#fff" />
+                        <Text style={styles.primaryBtnText}>Track My Order</Text>
+                        <ArrowRight size={18} color="rgba(255,255,255,0.7)" />
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={styles.outlineBtn} onPress={() => navigation.navigate('Home')}>
-                    <Text style={styles.outlineBtnText}>Continue Shopping →</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.secondaryBtn}
+                        onPress={() => navigation.navigate('Home')}
+                        activeOpacity={0.8}
+                    >
+                        <Home size={18} color="#6B7280" />
+                        <Text style={styles.secondaryBtnText}>Continue Shopping</Text>
+                    </TouchableOpacity>
+                </Animated.View>
             </View>
         </SafeAreaView>
     );
@@ -50,55 +87,47 @@ export default function OrderSuccessScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
     safe: { flex: 1, backgroundColor: '#FFFFFF' },
-    container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 32 },
-    iconCircle: { 
-        width: 140, 
-        height: 140, 
-        borderRadius: 70, 
-        backgroundColor: '#E11D4810', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        marginBottom: 32, 
-        borderWidth: 2, 
-        borderColor: '#E11D4822',
-        elevation: 4,
-        shadowColor: '#E11D48',
-        shadowOpacity: 0.1,
-        shadowRadius: 15
+    container: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 28 },
+    // Icon
+    iconRing: {
+        width: 120, height: 120, borderRadius: 60,
+        backgroundColor: '#FFF0F3', borderWidth: 2, borderColor: '#FFD6DE',
+        justifyContent: 'center', alignItems: 'center', marginBottom: 28,
+        shadowColor: PRIMARY, shadowOpacity: 0.15, shadowRadius: 20, elevation: 8,
     },
-    icon: { fontSize: 64 },
-    title: { fontSize: 34, fontWeight: '900', color: '#111827', marginBottom: 15, textAlign: 'center' },
-    subtitle: { color: '#6B7280', textAlign: 'center', lineHeight: 24, marginBottom: 35, fontSize: 16, fontWeight: '500' },
-    orderIdBox: { 
-        backgroundColor: '#F9FAFB', 
-        borderRadius: 20, 
-        paddingHorizontal: 35, 
-        paddingVertical: 18, 
-        marginBottom: 35, 
-        borderWidth: 2, 
-        borderColor: '#F3F4F6', 
-        alignItems: 'center' 
+    iconInner: { width: 80, height: 80, backgroundColor: '#fff', borderRadius: 40, justifyContent: 'center', alignItems: 'center' },
+    successLabel: { color: PRIMARY, fontSize: 10, fontWeight: '900', letterSpacing: 3, marginBottom: 10 },
+    title: { fontSize: 28, fontWeight: '900', color: '#111827', marginBottom: 12, textAlign: 'center', letterSpacing: -0.5 },
+    subtitle: { color: '#9CA3AF', textAlign: 'center', lineHeight: 22, fontSize: 14, fontWeight: '600', marginBottom: 28, paddingHorizontal: 8 },
+    // Order ID
+    orderIdBox: {
+        backgroundColor: '#F9FAFB', borderRadius: 20, paddingHorizontal: 32, paddingVertical: 20,
+        marginBottom: 28, borderWidth: 1.5, borderColor: '#F3F4F6', alignItems: 'center', width: '100%',
     },
-    orderIdLabel: { color: '#E11D48', fontSize: 11, fontWeight: '900', letterSpacing: 2, marginBottom: 6 },
-    orderId: { color: '#111827', fontWeight: '900', fontSize: 24 },
-    infoRow: { flexDirection: 'row', gap: 15, marginBottom: 40, width: '100%' },
-    infoCard: { 
-        flex: 1, 
-        backgroundColor: '#FFFFFF', 
-        borderRadius: 24, 
-        padding: 16, 
-        alignItems: 'center', 
-        borderWidth: 2, 
-        borderColor: '#F3F4F6',
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowRadius: 8
+    orderIdLabel: { color: PRIMARY, fontSize: 9, fontWeight: '900', letterSpacing: 2.5, marginBottom: 8 },
+    orderId: { color: '#111827', fontWeight: '900', fontSize: 26, letterSpacing: -0.5 },
+    orderIdLine: { height: 1, width: 40, backgroundColor: '#E5E7EB', marginVertical: 10 },
+    orderIdHint: { color: '#D1D5DB', fontSize: 11, fontWeight: '700' },
+    // Info
+    infoRow: { flexDirection: 'row', gap: 10, marginBottom: 32, width: '100%' },
+    infoCard: {
+        flex: 1, backgroundColor: '#FAFAFA', borderRadius: 18, paddingVertical: 16,
+        paddingHorizontal: 8, alignItems: 'center', borderWidth: 1, borderColor: '#F3F4F6',
     },
-    infoIcon: { fontSize: 28, marginBottom: 10 },
-    infoText: { color: '#6B7280', fontSize: 12, textAlign: 'center', fontWeight: '800' },
-    btn: { backgroundColor: '#E11D48', borderRadius: 24, paddingVertical: 20, width: '100%', alignItems: 'center', marginBottom: 15, elevation: 5, shadowColor: '#E11D48', shadowOpacity: 0.3, shadowRadius: 10 },
-    btnText: { color: '#FFFFFF', fontWeight: '900', fontSize: 17, letterSpacing: 0.5 },
-    outlineBtn: { borderWidth: 2, borderColor: '#F3F4F6', borderRadius: 24, paddingVertical: 20, width: '100%', alignItems: 'center' },
-    outlineBtnText: { color: '#111827', fontWeight: '900', fontSize: 17 },
+    infoEmoji: { fontSize: 24, marginBottom: 8 },
+    infoText: { color: '#6B7280', fontSize: 11, textAlign: 'center', fontWeight: '800', lineHeight: 16 },
+    // Buttons
+    primaryBtn: {
+        flexDirection: 'row', alignItems: 'center', gap: 10,
+        backgroundColor: PRIMARY, borderRadius: 18, paddingVertical: 17,
+        width: '100%', justifyContent: 'center', marginBottom: 12,
+        shadowColor: PRIMARY, shadowOpacity: 0.3, shadowRadius: 14, elevation: 8,
+    },
+    primaryBtnText: { color: '#fff', fontWeight: '900', fontSize: 16 },
+    secondaryBtn: {
+        flexDirection: 'row', alignItems: 'center', gap: 8,
+        backgroundColor: '#F9FAFB', borderRadius: 18, paddingVertical: 16,
+        width: '100%', justifyContent: 'center', borderWidth: 1, borderColor: '#F3F4F6',
+    },
+    secondaryBtnText: { color: '#6B7280', fontWeight: '800', fontSize: 15 },
 });

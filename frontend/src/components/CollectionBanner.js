@@ -1,87 +1,39 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
-export default function CollectionBanner({ title, subtitle, image, onPress }) {
-    return (
-        <TouchableOpacity 
-            style={styles.container} 
-            activeOpacity={0.9}
-            onPress={onPress}
+const CollectionBanner = ({ title, subtitle, image, onPress }) => (
+    <TouchableOpacity onPress={onPress} activeOpacity={0.9} style={styles.container}>
+        <ImageBackground
+            source={{ uri: image }}
+            style={styles.bg}
+            imageStyle={{ borderRadius: 24 }}
         >
-            <Image 
-                source={{ uri: image || 'https://images.unsplash.com/photo-1523381235312-3a1647fa9921?q=80&w=2070' }} 
-                style={styles.image}
-                resizeMode="cover"
-            />
-            <View style={styles.overlay}>
-                <View style={styles.content}>
-                    <Text style={styles.subtitle}>{subtitle || 'SEASONAL FAVS'}</Text>
-                    <Text style={styles.title}>{title || 'SUMMER COLLECTION'}</Text>
-                    <View style={styles.btn}>
-                        <Text style={styles.btnText}>SHOP NOW</Text>
-                    </View>
+            {/* Gradient Overlay */}
+            <View style={styles.overlay} />
+            <View style={styles.content}>
+                <Text style={styles.subtitle}>{subtitle}</Text>
+                <Text style={styles.title}>{title}</Text>
+                <View style={styles.cta}>
+                    <Text style={styles.ctaText}>EXPLORE NOW</Text>
+                    <Text style={styles.arrow}>→</Text>
                 </View>
             </View>
-        </TouchableOpacity>
-    );
-}
+        </ImageBackground>
+    </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
-    container: {
-        width: width - 40,
-        height: 220,
-        marginHorizontal: 20,
-        borderRadius: 40,
-        overflow: 'hidden',
-        marginBottom: 30,
-        backgroundColor: '#F3F4F6',
-        elevation: 10,
-        shadowColor: '#000',
-        shadowOpacity: 0.15,
-        shadowRadius: 20
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-    },
-    overlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.3)',
-        justifyContent: 'center',
-        padding: 30,
-    },
-    content: {
-        alignItems: 'center',
-    },
-    subtitle: {
-        color: '#FFFFFF',
-        fontSize: 11,
-        fontWeight: '900',
-        letterSpacing: 3,
-        marginBottom: 8,
-        textTransform: 'uppercase'
-    },
-    title: {
-        color: '#FFFFFF',
-        fontSize: 32,
-        fontWeight: '900',
-        marginBottom: 20,
-        textAlign: 'center',
-        letterSpacing: -1.5,
-        lineHeight: 38
-    },
-    btn: {
-        backgroundColor: '#FFFFFF',
-        paddingHorizontal: 28,
-        paddingVertical: 14,
-        borderRadius: 20,
-    },
-    btnText: {
-        color: '#000000',
-        fontWeight: '900',
-        fontSize: 11,
-        letterSpacing: 2,
-    },
+    container: { marginHorizontal: 16, marginVertical: 20, borderRadius: 24, overflow: 'hidden', elevation: 8, shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 20, shadowOffset: { width: 0, height: 8 } },
+    bg: { width: '100%', height: 200, justifyContent: 'flex-end' },
+    overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.45)', borderRadius: 24 },
+    content: { padding: 24 },
+    subtitle: { color: 'rgba(255,255,255,0.65)', fontSize: 10, fontWeight: '900', letterSpacing: 3, marginBottom: 6 },
+    title: { color: '#FFFFFF', fontSize: 22, fontWeight: '900', letterSpacing: -0.5, marginBottom: 16, lineHeight: 26 },
+    cta: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#E11D48', alignSelf: 'flex-start', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12 },
+    ctaText: { color: '#FFFFFF', fontSize: 11, fontWeight: '900', letterSpacing: 1.5 },
+    arrow: { color: '#FFFFFF', fontSize: 16, fontWeight: '900' },
 });
+
+export default CollectionBanner;

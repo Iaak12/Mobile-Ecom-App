@@ -1,68 +1,45 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Truck, ShieldCheck, RefreshCcw, Award } from 'lucide-react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
 const TRUST_ITEMS = [
-    { icon: Truck, label: 'FREE SHIPPING', sub: 'On orders above ₹999' },
-    { icon: ShieldCheck, label: '100% GENUINE', sub: 'Official merchandise' },
-    { icon: RefreshCcw, label: 'EASY RETURNS', sub: '30 days return policy' },
+    { emoji: '🚚', title: 'Free Delivery', sub: 'Orders over ₹999' },
+    { emoji: '↩️', title: 'Easy Returns', sub: '7-day policy' },
+    { emoji: '🔒', title: 'Secure Pay', sub: '100% encrypted' },
+    { emoji: '✅', title: 'Authentic', sub: 'Official merch only' },
 ];
 
-export default function TrustBar() {
-    return (
-        <View style={styles.container}>
-            {TRUST_ITEMS.map((item, index) => (
-                <View key={index} style={styles.item}>
-                    <item.icon size={20} color="#E11D48" strokeWidth={2.5} />
-                    <View style={styles.textContainer}>
-                        <Text style={styles.label}>{item.label}</Text>
+const TrustBar = () => (
+    <View style={styles.container}>
+        <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scroll}
+        >
+            {TRUST_ITEMS.map((item, i) => (
+                <View key={i} style={styles.pill}>
+                    <Text style={styles.emoji}>{item.emoji}</Text>
+                    <View>
+                        <Text style={styles.title}>{item.title}</Text>
                         <Text style={styles.sub}>{item.sub}</Text>
                     </View>
                 </View>
             ))}
-        </View>
-    );
-}
+        </ScrollView>
+    </View>
+);
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#FFFFFF',
-        marginHorizontal: 20,
-        paddingVertical: 25,
-        paddingHorizontal: 10,
-        borderRadius: 32,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderWidth: 1,
-        borderColor: '#F3F4F6',
-        marginTop: 15,
-        marginBottom: 25,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowRadius: 10
+    container: { marginVertical: 10 },
+    scroll: { paddingHorizontal: 16, gap: 10, paddingVertical: 4 },
+    pill: {
+        flexDirection: 'row', alignItems: 'center', gap: 10,
+        backgroundColor: '#F9FAFB', borderRadius: 16,
+        paddingHorizontal: 14, paddingVertical: 10,
+        borderWidth: 1, borderColor: '#F3F4F6',
     },
-    item: {
-        flex: 1,
-        alignItems: 'center',
-    },
-    textContainer: {
-        alignItems: 'center',
-        marginTop: 10,
-    },
-    label: {
-        color: '#111827',
-        fontSize: 10,
-        fontWeight: '900',
-        letterSpacing: 1.2,
-        textTransform: 'uppercase'
-    },
-    sub: {
-        color: '#9CA3AF',
-        fontSize: 8,
-        fontWeight: '800',
-        marginTop: 3,
-        textAlign: 'center',
-        textTransform: 'uppercase'
-    },
+    emoji: { fontSize: 18 },
+    title: { color: '#111827', fontSize: 11, fontWeight: '900' },
+    sub: { color: '#9CA3AF', fontSize: 10, fontWeight: '600', marginTop: 1 },
 });
+
+export default TrustBar;

@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native';
+
+const { width } = Dimensions.get('window');
+const CIRCLE_SIZE = 72;
+
+const FALLBACK_COLORS = ['#FFF0F3', '#FFF7ED', '#F0FDF4', '#EFF6FF', '#FDF4FF', '#FFFBEB'];
+const FALLBACK_EMOJI = ['👗', '👟', '⌚', '🎧', '📱', '💄', '🧴', '🎽'];
 
 const CategoryCircles = ({ categories, navigation }) => {
     if (!categories || categories.length === 0) return null;
@@ -8,22 +14,28 @@ const CategoryCircles = ({ categories, navigation }) => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>SHOP BY CATEGORY</Text>
+                <View style={styles.titleLine} />
             </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scroll}>
-                {categories.map((cat) => (
-                    <TouchableOpacity 
-                        key={cat._id} 
+            <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.scroll}
+            >
+                {categories.map((cat, i) => (
+                    <TouchableOpacity
+                        key={cat._id}
                         style={styles.item}
-                        onPress={() => navigation.navigate('ProductList', { category: cat._id, categoryName: cat.name })}
+                        onPress={() => navigation.navigate('ProductList', { categoryId: cat._id, categoryName: cat.name })}
+                        activeOpacity={0.8}
                     >
-                        <View style={styles.circle}>
+                        <View style={[styles.circle, { backgroundColor: FALLBACK_COLORS[i % FALLBACK_COLORS.length] }]}>
                             {cat.image ? (
-                                <Image source={{ uri: cat.image }} style={styles.image} />
+                                <Image source={{ uri: cat.image }} style={styles.img} />
                             ) : (
-                                <Text style={{fontSize: 24}}>📁</Text>
+                                <Text style={{ fontSize: 28 }}>{FALLBACK_EMOJI[i % FALLBACK_EMOJI.length]}</Text>
                             )}
                         </View>
-                        <Text style={styles.catName} numberOfLines={1}>{cat.name}</Text>
+                        <Text style={styles.label} numberOfLines={2}>{cat.name}</Text>
                     </TouchableOpacity>
                 ))}
             </ScrollView>
@@ -32,43 +44,20 @@ const CategoryCircles = ({ categories, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: { marginVertical: 25 },
-    header: { paddingHorizontal: 22, marginBottom: 18 },
-    title: { 
-        color: '#111827', 
-        fontSize: 14, 
-        fontWeight: '900', 
-        letterSpacing: 1.5,
-        textTransform: 'uppercase'
-    },
-    scroll: { paddingHorizontal: 18 },
-    item: { alignItems: 'center', width: 90, marginRight: 10 },
+    container: { marginVertical: 20 },
+    header: { paddingHorizontal: 20, marginBottom: 18 },
+    title: { fontSize: 13, fontWeight: '900', color: '#111827', letterSpacing: 2 },
+    titleLine: { height: 2.5, width: 24, backgroundColor: '#E11D48', borderRadius: 2, marginTop: 5 },
+    scroll: { paddingHorizontal: 16, gap: 4 },
+    item: { alignItems: 'center', width: CIRCLE_SIZE + 20, marginRight: 8 },
     circle: {
-        width: 76,
-        height: 76,
-        borderRadius: 38,
-        backgroundColor: '#FFFFFF',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1.5,
-        borderColor: '#F3F4F6',
-        overflow: 'hidden',
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.08,
-        shadowRadius: 8
+        width: CIRCLE_SIZE, height: CIRCLE_SIZE, borderRadius: CIRCLE_SIZE / 2,
+        justifyContent: 'center', alignItems: 'center', overflow: 'hidden', marginBottom: 10,
+        borderWidth: 1.5, borderColor: 'rgba(0,0,0,0.04)',
+        shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 6, elevation: 3,
     },
-    image: { width: '100%', height: '100%', resizeMode: 'cover' },
-    catName: { 
-        color: '#111827', 
-        fontSize: 10, 
-        fontWeight: '900', 
-        marginTop: 10, 
-        textAlign: 'center',
-        textTransform: 'uppercase',
-        letterSpacing: 0.5
-    }
+    img: { width: '100%', height: '100%', resizeMode: 'cover' },
+    label: { color: '#374151', fontSize: 11, fontWeight: '800', textAlign: 'center', lineHeight: 15 },
 });
 
 export default CategoryCircles;
