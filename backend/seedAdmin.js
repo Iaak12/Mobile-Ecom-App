@@ -1,40 +1,39 @@
-require('dotenv').config();
 const mongoose = require('mongoose');
-const User = require('./models/User');
 const bcrypt = require('bcryptjs');
-const connectDB = require('./config/db');
+const User = require('./models/User');
+require('dotenv').config();
 
-const createAdmin = async () => {
+const seedAdmin = async () => {
     try {
-        await connectDB();
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log('Connected to MongoDB');
 
-        const email = 'mobileappadmin@admin';
-        const password = 'mobileappadmin1201@admin';
+        const adminEmail = 'mobileappadmin@admin';
+        const adminPass = 'mobileappadmin1201@admin';
 
-        const userExists = await User.findOne({ email });
+        let admin = await User.findOne({ email: adminEmail });
 
-        if (userExists) {
-            console.log('Admin already exists');
-            process.exit();
+        if (admin) {
+            console.log('Admin already exists. Updating password...');
+            admin.password = adminPass; // The pre-save hook will hash it
+            await admin.save();
+            console.log('Admin updated successfully');
+        } else {
+            console.log('Creating new admin...');
+            await User.create({
+                name: 'System Administrator',
+                email: adminEmail,
+                password: adminPass,
+                role: 'admin'
+            });
+            console.log('Admin created successfully');
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        await User.create({
-            name: 'Master Admin',
-            email,
-            password: hashedPassword,
-            role: 'admin',
-            isActive: true
-        });
-
-        console.log('Admin user created successfully');
-        process.exit();
+        process.exit(0);
     } catch (err) {
-        console.error('Error creating admin:', err);
+        console.error('Error seeding admin:', err);
         process.exit(1);
     }
 };
 
-createAdmin();
+seedAdmin();

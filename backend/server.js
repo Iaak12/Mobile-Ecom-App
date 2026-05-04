@@ -17,7 +17,34 @@ const cmsRoutes = require('./routes/cmsRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 
 // Connect to database
-connectDB();
+connectDB().then(async () => {
+    // Seed Admin User
+    const User = require('./models/User');
+    const adminEmail = 'mobileappadmin@admin';
+    const adminPass = 'mobileappadmin1201@admin';
+    
+    try {
+        const adminExists = await User.findOne({ email: adminEmail });
+        if (!adminExists) {
+            await User.create({
+                name: 'System Administrator',
+                email: adminEmail,
+                password: adminPass,
+                role: 'admin'
+            });
+            console.log('✅ Admin user seeded successfully');
+        } else {
+            // Optional: Ensure role is admin
+            if (adminExists.role !== 'admin') {
+                adminExists.role = 'admin';
+                await adminExists.save();
+                console.log('✅ Admin role updated');
+            }
+        }
+    } catch (err) {
+        console.error('❌ Admin seeding failed:', err.message);
+    }
+});
 
 const app = express();
 
