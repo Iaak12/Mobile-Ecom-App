@@ -30,13 +30,17 @@ export default function CollectionBanner({ title, subtitle, image, onPress }) {
 
 const styles = StyleSheet.create({
     container: {
-        width: width - 32,
-        height: 200,
-        marginHorizontal: 16,
-        borderRadius: 32,
+        width: width - 40,
+        height: 220,
+        marginHorizontal: 20,
+        borderRadius: 40,
         overflow: 'hidden',
-        marginBottom: 25,
+        marginBottom: 30,
         backgroundColor: '#F3F4F6',
+        elevation: 10,
+        shadowColor: '#000',
+        shadowOpacity: 0.15,
+        shadowRadius: 20
     },
     image: {
         width: '100%',
@@ -44,39 +48,40 @@ const styles = StyleSheet.create({
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.2)',
-        justifyContent: 'flex-end',
-        padding: 24,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        justifyContent: 'center',
+        padding: 30,
     },
     content: {
-        alignItems: 'flex-start',
+        alignItems: 'center',
     },
     subtitle: {
         color: '#FFFFFF',
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: '900',
-        letterSpacing: 2,
-        marginBottom: 4,
+        letterSpacing: 3,
+        marginBottom: 8,
+        textTransform: 'uppercase'
     },
     title: {
         color: '#FFFFFF',
-        fontSize: 28,
+        fontSize: 32,
         fontWeight: '900',
-        marginBottom: 16,
-        textShadowColor: 'rgba(0, 0, 0, 0.4)',
-        textShadowOffset: { width: 0, height: 2 },
-        textShadowRadius: 4,
+        marginBottom: 20,
+        textAlign: 'center',
+        letterSpacing: -1.5,
+        lineHeight: 38
     },
     btn: {
-        backgroundColor: '#E11D48',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 14,
+        backgroundColor: '#FFFFFF',
+        paddingHorizontal: 28,
+        paddingVertical: 14,
+        borderRadius: 20,
     },
     btnText: {
-        color: '#FFFFFF',
+        color: '#000000',
         fontWeight: '900',
-        fontSize: 12,
-        letterSpacing: 1,
+        fontSize: 11,
+        letterSpacing: 2,
     },
 });

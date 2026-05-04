@@ -26,38 +26,43 @@ export default function TrustBar() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#F9FAFB',
-        marginHorizontal: 16,
-        paddingVertical: 20,
-        paddingHorizontal: 15,
-        borderRadius: 24,
+        backgroundColor: '#FFFFFF',
+        marginHorizontal: 20,
+        paddingVertical: 25,
+        paddingHorizontal: 10,
+        borderRadius: 32,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        borderWidth: 1.5,
+        borderWidth: 1,
         borderColor: '#F3F4F6',
-        marginTop: 10,
-        marginBottom: 20,
+        marginTop: 15,
+        marginBottom: 25,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOpacity: 0.05,
+        shadowRadius: 10
     },
     item: {
         flex: 1,
         alignItems: 'center',
-        paddingHorizontal: 5,
     },
     textContainer: {
         alignItems: 'center',
-        marginTop: 8,
+        marginTop: 10,
     },
     label: {
         color: '#111827',
-        fontSize: 9,
+        fontSize: 10,
         fontWeight: '900',
-        letterSpacing: 0.5,
+        letterSpacing: 1.2,
+        textTransform: 'uppercase'
     },
     sub: {
-        color: '#6B7280',
-        fontSize: 7,
-        fontWeight: '700',
-        marginTop: 2,
+        color: '#9CA3AF',
+        fontSize: 8,
+        fontWeight: '800',
+        marginTop: 3,
         textAlign: 'center',
+        textTransform: 'uppercase'
     },
 });

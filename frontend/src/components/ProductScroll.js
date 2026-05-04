@@ -45,34 +45,64 @@ const ProductScroll = ({ title, products, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: { marginVertical: 25 },
-    header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 15 },
-    title: { color: '#111827', fontSize: 16, fontWeight: '900', letterSpacing: 0.5 },
-    seeAll: { color: '#E11D48', fontSize: 11, fontWeight: '900' },
+    container: { marginVertical: 30 },
+    header: { 
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        paddingHorizontal: 22, 
+        marginBottom: 20 
+    },
+    title: { 
+        color: '#111827', 
+        fontSize: 18, 
+        fontWeight: '900', 
+        letterSpacing: -0.5,
+        textTransform: 'uppercase'
+    },
+    seeAll: { 
+        color: '#E11D48', 
+        fontSize: 11, 
+        fontWeight: '900',
+        letterSpacing: 1.5
+    },
     scroll: { paddingHorizontal: 15 },
     card: { 
         width: ITEM_WIDTH, 
-        marginRight: 15, 
+        marginRight: 18, 
         backgroundColor: '#FFFFFF', 
-        borderRadius: 24, 
+        borderRadius: 28, 
         overflow: 'hidden', 
         borderWidth: 1, 
         borderColor: '#F3F4F6',
-        elevation: 3,
+        elevation: 4,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.06,
-        shadowRadius: 10
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.08,
+        shadowRadius: 12
     },
-    imageBox: { height: 180, backgroundColor: '#F9FAFB' },
+    imageBox: { height: 200, backgroundColor: '#F9FAFB' },
     image: { width: '100%', height: '100%', resizeMode: 'cover' },
-    badge: { position: 'absolute', top: 10, left: 10, backgroundColor: '#E11D48', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
-    badgeText: { color: '#fff', fontSize: 10, fontWeight: '900' },
-    info: { padding: 14 },
-    name: { color: '#111827', fontSize: 13, fontWeight: '700' },
-    priceRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6, gap: 8 },
-    price: { color: '#E11D48', fontSize: 15, fontWeight: '900' },
-    oldPrice: { color: '#9CA3AF', fontSize: 12, textDecorationLine: 'line-through' }
+    badge: { 
+        position: 'absolute', 
+        top: 12, 
+        left: 12, 
+        backgroundColor: '#000', 
+        paddingHorizontal: 10, 
+        paddingVertical: 5, 
+        borderRadius: 10 
+    },
+    badgeText: { color: '#fff', fontSize: 9, fontWeight: '900', letterSpacing: 1 },
+    info: { padding: 18 },
+    name: { 
+        color: '#111827', 
+        fontSize: 14, 
+        fontWeight: '800',
+        letterSpacing: -0.2
+    },
+    priceRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8, gap: 10 },
+    price: { color: '#000', fontSize: 17, fontWeight: '900' },
+    oldPrice: { color: '#9CA3AF', fontSize: 13, textDecorationLine: 'line-through', fontWeight: '700' }
 });
 
 export default ProductScroll;

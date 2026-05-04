@@ -145,28 +145,66 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
-        paddingHorizontal: 16, 
-        height: 60, 
+        paddingHorizontal: 20, 
+        height: 70, 
         backgroundColor: '#FFFFFF',
-        borderBottomWidth: 1, 
-        borderBottomColor: '#F3F4F6' 
     },
-    headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-    headerRight: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-    brandText: { color: '#111827', fontSize: 24, fontWeight: '900', letterSpacing: -1.5 },
-    iconBtn: { padding: 8 },
-    searchWrap: { paddingHorizontal: 16, marginTop: 15, marginBottom: 10 },
+    headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 15 },
+    headerRight: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+    brandText: { 
+        color: '#000', 
+        fontSize: 28, 
+        fontWeight: '900', 
+        letterSpacing: -2,
+        textTransform: 'uppercase'
+    },
+    iconBtn: { 
+        padding: 10,
+        backgroundColor: '#F9FAFB',
+        borderRadius: 14,
+        borderWidth: 1,
+        borderColor: '#F3F4F6'
+    },
+    searchWrap: { 
+        paddingHorizontal: 20, 
+        marginTop: 5, 
+        marginBottom: 15 
+    },
     searchInner: { 
         flexDirection: 'row', 
         alignItems: 'center', 
         backgroundColor: '#F3F4F6', 
-        paddingHorizontal: 15,
-        paddingVertical: 12,
-        borderRadius: 16,
+        paddingHorizontal: 18,
+        paddingVertical: 14,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: '#E5E7EB'
     },
-    searchPlaceholder: { color: '#6B7280', fontSize: 13, marginLeft: 12, fontWeight: '600' },
-    greeting: { paddingHorizontal: 20, marginVertical: 15 },
-    greetText: { color: '#6B7280', fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1.5 },
-    userName: { color: '#111827', fontSize: 22, fontWeight: '900', marginTop: 2 },
+    searchPlaceholder: { 
+        color: '#9CA3AF', 
+        fontSize: 14, 
+        marginLeft: 12, 
+        fontWeight: '700',
+        letterSpacing: -0.3
+    },
+    greeting: { 
+        paddingHorizontal: 22, 
+        marginVertical: 10,
+        marginBottom: 20
+    },
+    greetText: { 
+        color: '#9CA3AF', 
+        fontSize: 11, 
+        fontWeight: '900', 
+        textTransform: 'uppercase', 
+        letterSpacing: 2 
+    },
+    userName: { 
+        color: '#111827', 
+        fontSize: 32, 
+        fontWeight: '900', 
+        marginTop: 2,
+        letterSpacing: -1.2
+    },
     content: { flex: 1 },
 });
