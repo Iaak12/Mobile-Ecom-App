@@ -27,6 +27,8 @@ import MyOrdersScreen from '../screens/MyOrdersScreen';
 import OrderDetailScreen from '../screens/OrderDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import AdminDashboardScreen from '../screens/AdminDashboardScreen';
+import RazorpayWebViewScreen from '../screens/RazorpayWebViewScreen';
+import RazorpayVerifyScreen from '../screens/RazorpayVerifyScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -49,6 +51,8 @@ function CartStack() {
             <Stack.Screen name="Cart" component={CartScreen} />
             <Stack.Screen name="Checkout" component={CheckoutScreen} />
             <Stack.Screen name="OrderSuccess" component={OrderSuccessScreen} />
+            <Stack.Screen name="RazorpayWebView" component={RazorpayWebViewScreen} />
+            <Stack.Screen name="RazorpayVerify" component={RazorpayVerifyScreen} />
         </Stack.Navigator>
     );
 }
