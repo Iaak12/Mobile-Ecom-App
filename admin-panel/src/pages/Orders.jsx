@@ -1,180 +1,166 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
-import { 
-  Eye, 
-  ChevronRight, 
-  MoreHorizontal,
-  Search,
-  Filter,
-  CheckCircle2,
-  Clock,
-  Truck,
-  Package,
-  XCircle
-} from 'lucide-react';
+import { Eye, ChevronRight, Search, Filter, CheckCircle2, Clock, Truck, Package, XCircle } from 'lucide-react';
 
 const STATUS_FLOW = ['Processing', 'Confirmed', 'Shipped', 'Out for Delivery', 'Delivered'];
 
-const STATUS_ICONS = {
-  Processing: <Clock size={14} className="text-[#F7971E]" />,
-  Confirmed: <CheckCircle2 size={14} className="text-[#6C63FF]" />,
-  Shipped: <Package size={14} className="text-[#43E97B]" />,
-  'Out for Delivery': <Truck size={14} className="text-[#43E97B]" />,
-  Delivered: <CheckCircle2 size={14} className="text-[#43E97B]" />,
-  Cancelled: <XCircle size={14} className="text-[#FF6584]" />,
+const STATUS_CONFIG = {
+  Processing: { color: 'bg-orange-100 text-orange-600', icon: Clock },
+  Confirmed: { color: 'bg-blue-100 text-blue-600', icon: CheckCircle2 },
+  Shipped: { color: 'bg-purple-100 text-purple-600', icon: Package },
+  'Out for Delivery': { color: 'bg-cyan-100 text-cyan-600', icon: Truck },
+  Delivered: { color: 'bg-emerald-100 text-emerald-600', icon: CheckCircle2 },
+  Cancelled: { color: 'bg-red-100 text-red-500', icon: XCircle },
 };
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+  useEffect(() => { fetchOrders(); }, []);
 
   const fetchOrders = async () => {
     try {
       const { data } = await axiosInstance.get('/orders/admin/all');
-      if (data.success) {
-        setOrders(data.orders);
-      }
-    } catch (err) {
-      console.error('Failed to fetch orders:', err);
-    } finally {
-      setLoading(false);
-    }
+      if (data.success) setOrders(data.orders);
+    } catch (err) { console.error(err); }
+    finally { setLoading(false); }
   };
 
   const advanceStatus = async (orderId, currentStatus) => {
-    const currIdx = STATUS_FLOW.indexOf(currentStatus);
-    if (currIdx === -1 || currIdx >= STATUS_FLOW.length - 1) return;
-    const next = STATUS_FLOW[currIdx + 1];
-    
-    if (window.confirm(`Update order status to "${next}"?`)) {
-        try {
-            await axiosInstance.put(`/orders/${orderId}/status`, { status: next });
-            fetchOrders();
-        } catch (err) {
-            alert('Error updating status');
-        }
-    }
+    const idx = STATUS_FLOW.indexOf(currentStatus);
+    if (idx === -1 || idx >= STATUS_FLOW.length - 1) return;
+    const next = STATUS_FLOW[idx + 1];
+    if (!window.confirm(`Update to "${next}"?`)) return;
+    try {
+      await axiosInstance.put(`/orders/${orderId}/status`, { status: next });
+      fetchOrders();
+    } catch { alert('Error updating status'); }
   };
 
+  const filtered = orders.filter(o =>
+    o._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    o.user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    o.status?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+    </div>
+  );
+
   return (
-    <div className="space-y-12">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-5xl font-black tracking-tighter text-text-main uppercase">Orders Ledger</h1>
-          <p className="text-text-muted font-bold mt-2 text-lg">Monitor and fulfill global customer acquisitions.</p>
+          <h1 className="text-2xl md:text-3xl font-black tracking-tight text-gray-900">Orders</h1>
+          <p className="text-gray-400 text-sm mt-1">Manage and fulfill customer orders</p>
         </div>
-        <div className="flex gap-4">
-          <button className="bg-white border border-border px-8 py-4 rounded-2xl flex items-center gap-3 text-xs font-black tracking-[0.2em] uppercase hover:bg-surface transition-all shadow-sm">
-            <Filter size={18} />
-            Filter
-          </button>
-          <button className="bg-primary text-white px-8 py-4 rounded-2xl text-xs font-black tracking-[0.2em] uppercase shadow-2xl shadow-primary/30 flex items-center gap-3 active:scale-95 transition-all">
-            <Package size={18} />
-            Export Data
-          </button>
-        </div>
+        <button className="btn-primary px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
+          <Package size={16} /> Export
+        </button>
       </div>
 
-      <div className="bg-white rounded-[48px] overflow-hidden border border-border shadow-2xl shadow-slate-200/20">
-        <div className="p-10 border-b border-border bg-white flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="flex-1 w-full max-w-xl relative group">
-                <Search size={22} className="absolute left-6 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" />
-                <input 
-                    type="text" 
-                    placeholder="Search by Order ID, Customer or Status..." 
-                    className="w-full bg-surface border border-border rounded-[24px] pl-16 pr-8 py-5 text-sm font-bold outline-none input-focus transition-all placeholder:text-text-muted text-text-main"
-                />
-            </div>
-            <div className="flex items-center gap-6">
-                <div className="px-6 py-3 bg-surface border border-border rounded-2xl flex items-center gap-3">
-                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-                    <span className="text-[10px] font-black text-text-main tracking-[0.2em] uppercase">{orders.length} Active Orders</span>
-                </div>
-            </div>
+      {/* Table */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        {/* Toolbar */}
+        <div className="p-4 md:p-6 border-b border-gray-100 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="relative w-full sm:max-w-xs group">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              placeholder="Search orders..."
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-gray-700 input-focus placeholder:text-gray-300"
+            />
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">{orders.length} Orders</span>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[1000px]">
+          <table className="w-full text-left min-w-[700px]">
             <thead>
-              <tr className="border-b border-border bg-surface/30">
-                <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">Identification</th>
-                <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">Customer Node</th>
-                <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">Temporal Info</th>
-                <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">Financials</th>
-                <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">Fulfillment</th>
-                <th className="px-10 py-8 text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">Management</th>
+              <tr className="border-b border-gray-100 bg-gray-50/50">
+                {['Order ID', 'Customer', 'Date', 'Total', 'Status', 'Actions'].map(h => (
+                  <th key={h} className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">{h}</th>
+                ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
-              {orders.map((order) => (
-                <tr key={order._id} className="hover:bg-primary/5 transition-all group cursor-pointer">
-                  <td className="px-10 py-8">
-                    <span className="text-sm font-black text-primary tracking-widest bg-primary/5 px-4 py-2 rounded-xl border border-primary/10">
+            <tbody className="divide-y divide-gray-100">
+              {filtered.map((order) => {
+                const cfg = STATUS_CONFIG[order.status] || STATUS_CONFIG.Processing;
+                const StatusIcon = cfg.icon;
+                const canAdvance = order.status !== 'Delivered' && order.status !== 'Cancelled';
+                return (
+                  <tr key={order._id} className="hover:bg-gray-50/50 transition-colors group">
+                    <td className="px-6 py-4">
+                      <span className="text-sm font-black text-primary bg-primary/10 px-3 py-1 rounded-full">
                         #{order._id.slice(-8).toUpperCase()}
-                    </span>
-                  </td>
-                  <td className="px-10 py-8">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-[18px] gradient-bg p-0.5 shadow-lg shadow-primary/10">
-                        <div className="w-full h-full rounded-[16px] bg-white flex items-center justify-center text-primary text-sm font-black">
-                            {order.user?.name?.charAt(0) || 'U'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center text-white text-xs font-black shrink-0">
+                          {order.user?.name?.charAt(0) || 'U'}
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-gray-900">{order.user?.name || 'Anonymous'}</p>
+                          <p className="text-xs text-gray-400">Verified</p>
                         </div>
                       </div>
-                      <div>
-                        <p className="text-base font-black text-text-main group-hover:text-primary transition-colors tracking-tighter">{order.user?.name || 'Anonymous'}</p>
-                        <p className="text-[10px] text-text-muted font-bold mt-1 tracking-widest uppercase">Verified Account</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-10 py-8">
-                    <div className="space-y-1">
-                        <p className="text-sm font-black text-text-main tracking-tight">{new Date(order.createdAt).toLocaleDateString(undefined, { month: 'long', day: 'numeric' })}</p>
-                        <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">{new Date(order.createdAt).getFullYear()}</p>
-                    </div>
-                  </td>
-                  <td className="px-10 py-8">
-                    <div className="flex items-center text-lg font-black text-text-main tracking-tighter">
-                        <span className="text-primary mr-1">₹</span>
-                        <span>{order.totalPrice.toLocaleString()}</span>
-                    </div>
-                  </td>
-                  <td className="px-10 py-8">
-                    <div className="flex items-center gap-3 bg-white border border-border rounded-2xl px-5 py-2.5 w-fit shadow-sm">
-                      {STATUS_ICONS[order.status]}
-                      <span className="text-[10px] font-black text-text-main uppercase tracking-widest">{order.status}</span>
-                    </div>
-                  </td>
-                  <td className="px-10 py-8">
-                    <div className="flex items-center gap-4">
-                      <button 
-                        className="w-12 h-12 flex items-center justify-center bg-white border border-border rounded-2xl text-text-muted hover:text-primary hover:border-primary hover:shadow-lg hover:shadow-primary/10 transition-all duration-300"
-                      >
-                        <Eye size={20} />
-                      </button>
-                      {order.status !== 'Delivered' && order.status !== 'Cancelled' && (
-                        <button 
-                          onClick={(e) => { e.stopPropagation(); advanceStatus(order._id, order.status); }}
-                          className="w-12 h-12 flex items-center justify-center bg-accent-success/5 border border-accent-success/10 rounded-2xl text-accent-success hover:bg-accent-success hover:text-white hover:border-accent-success transition-all duration-300 shadow-sm"
-                        >
-                          <ChevronRight size={20} />
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-semibold text-gray-700">
+                        {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-black text-gray-900">₹{order.totalPrice?.toLocaleString()}</p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full ${cfg.color}`}>
+                        <StatusIcon size={12} />
+                        {order.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <button className="p-2 rounded-lg text-gray-400 hover:text-primary hover:bg-primary/10 transition-all">
+                          <Eye size={16} />
                         </button>
-                      )}
+                        {canAdvance && (
+                          <button
+                            onClick={() => advanceStatus(order._id, order.status)}
+                            className="p-2 rounded-lg text-emerald-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all"
+                            title="Advance Status"
+                          >
+                            <ChevronRight size={16} />
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan="6" className="px-6 py-20 text-center">
+                    <div className="flex flex-col items-center gap-3 opacity-30">
+                      <Package size={48} />
+                      <p className="text-sm font-bold uppercase tracking-widest">No Orders Found</p>
                     </div>
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
-        </div>
-
-        <div className="p-10 border-t border-border bg-surface/30 flex justify-center">
-            <button className="text-[10px] font-black tracking-[0.3em] uppercase text-text-muted hover:text-primary transition-colors py-2">
-                Scan Historical Transactions
-            </button>
         </div>
       </div>
     </div>

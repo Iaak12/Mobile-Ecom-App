@@ -1,51 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  DollarSign, 
-  ShoppingBag, 
-  Users, 
-  TrendingUp, 
-  ArrowUpRight 
-} from 'lucide-react';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  AreaChart,
-  Area
+import { DollarSign, ShoppingBag, Users, TrendingUp, ArrowUpRight, Package } from 'lucide-react';
+import {
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
+import axiosInstance from '../api/axiosInstance';
 
-const StatCard = ({ icon: Icon, label, value, trend, color }) => (
-  <div className="bg-white p-8 rounded-[32px] border border-border flex flex-col gap-6 transition-all duration-300 hover:shadow-xl group">
-    <div className="flex items-center gap-6">
-      <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-        <Icon size={32} strokeWidth={2.5} />
+const StatCard = ({ icon: Icon, label, value, trend, trendUp = true }) => (
+  <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg hover:shadow-gray-100 transition-all duration-300 group">
+    <div className="flex items-start justify-between mb-4">
+      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+        <Icon size={24} />
       </div>
-      <div className="flex-1">
-        <p className="text-text-muted text-[10px] font-black tracking-[0.2em] uppercase">{label}</p>
-        <p className="text-4xl font-black mt-1 text-text-main tracking-tighter">{value}</p>
-      </div>
+      <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${trendUp ? 'bg-emerald-50 text-emerald-600' : 'bg-orange-50 text-orange-600'}`}>
+        {trend}
+      </span>
     </div>
-    <div className="flex items-center gap-2 pt-4 border-t border-border">
-      <div className="flex items-center gap-1 text-[10px] font-black text-accent-success bg-accent-success/10 px-2 py-1 rounded-lg">
-        <TrendingUp size={12} />
-        <span>{trend}</span>
-      </div>
-      <span className="text-[10px] text-text-muted font-bold uppercase tracking-widest">vs last month</span>
-    </div>
+    <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{label}</p>
+    <p className="text-3xl font-black text-gray-900 tracking-tighter">{value}</p>
   </div>
 );
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
-    totalRevenue: 0,
-    totalOrders: 0,
-    totalUsers: 0,
-    totalProducts: 0,
-    pendingOrders: 0
+    totalRevenue: 0, totalOrders: 0, totalUsers: 0, totalProducts: 0, pendingOrders: 0
   });
   const [loading, setLoading] = useState(true);
 
@@ -53,9 +30,7 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const { data } = await axiosInstance.get('/admin/stats');
-        if (data.success) {
-          setStats(data.stats);
-        }
+        if (data.success) setStats(data.stats);
       } catch (err) {
         console.error('Failed to fetch stats:', err);
       } finally {
@@ -66,117 +41,119 @@ const Dashboard = () => {
   }, []);
 
   const chartData = [
-    { name: 'Mon', revenue: stats.totalRevenue * 0.1, orders: Math.floor(stats.totalOrders * 0.1) },
-    { name: 'Tue', revenue: stats.totalRevenue * 0.12, orders: Math.floor(stats.totalOrders * 0.11) },
-    { name: 'Wed', revenue: stats.totalRevenue * 0.15, orders: Math.floor(stats.totalOrders * 0.14) },
-    { name: 'Thu', revenue: stats.totalRevenue * 0.11, orders: Math.floor(stats.totalOrders * 0.09) },
-    { name: 'Fri', revenue: stats.totalRevenue * 0.18, orders: Math.floor(stats.totalOrders * 0.2) },
-    { name: 'Sat', revenue: stats.totalRevenue * 0.2, orders: Math.floor(stats.totalOrders * 0.22) },
-    { name: 'Sun', revenue: stats.totalRevenue * 0.14, orders: Math.floor(stats.totalOrders * 0.14) },
+    { name: 'Mon', revenue: stats.totalRevenue * 0.10 },
+    { name: 'Tue', revenue: stats.totalRevenue * 0.12 },
+    { name: 'Wed', revenue: stats.totalRevenue * 0.15 },
+    { name: 'Thu', revenue: stats.totalRevenue * 0.11 },
+    { name: 'Fri', revenue: stats.totalRevenue * 0.18 },
+    { name: 'Sat', revenue: stats.totalRevenue * 0.20 },
+    { name: 'Sun', revenue: stats.totalRevenue * 0.14 },
   ];
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-14 h-14 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+    </div>
+  );
 
   return (
-    <div className="space-y-12 pb-12">
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-        <div className="max-w-2xl">
-          <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-text-main uppercase leading-none">Global Overview</h1>
-          <p className="text-text-muted font-bold mt-3 text-lg leading-relaxed">Real-time performance analytics from your core database.</p>
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-black tracking-tight text-gray-900">Dashboard</h1>
+          <p className="text-gray-400 text-sm mt-1">Real-time overview of your store performance</p>
         </div>
-        <div className="bg-white px-8 py-4 rounded-2xl border border-border flex items-center gap-4 shadow-sm w-fit">
-            <div className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse shadow-[0_0_10px_rgba(225,29,72,0.5)]"></div>
-            <span className="text-xs font-black tracking-widest uppercase text-text-main">Live Status</span>
+        <div className="flex items-center gap-2 bg-white border border-gray-100 rounded-xl px-4 py-2.5 w-fit shadow-sm">
+          <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+          <span className="text-xs font-bold text-gray-700 uppercase tracking-widest">Live</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-        <StatCard 
-          icon={DollarSign} 
-          label="GROSS REVENUE" 
-          value={`₹${(stats.totalRevenue || 0).toLocaleString()}`} 
+      {/* Stat Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          icon={DollarSign}
+          label="Revenue"
+          value={`₹${(stats.totalRevenue || 0).toLocaleString()}`}
           trend="+18.4%"
         />
-        <StatCard 
-          icon={ShoppingBag} 
-          label="STORE ORDERS" 
-          value={stats.totalOrders} 
-          trend={`+${stats.pendingOrders} Processing`}
+        <StatCard
+          icon={ShoppingBag}
+          label="Orders"
+          value={stats.totalOrders}
+          trend={`${stats.pendingOrders} pending`}
         />
-        <StatCard 
-          icon={Users} 
-          label="TOTAL CUSTOMERS" 
-          value={stats.totalUsers} 
+        <StatCard
+          icon={Users}
+          label="Customers"
+          value={stats.totalUsers}
           trend="Active"
         />
-        <StatCard 
-          icon={TrendingUp} 
-          label="ACTIVE PRODUCTS" 
-          value={stats.totalProducts} 
+        <StatCard
+          icon={TrendingUp}
+          label="Products"
+          value={stats.totalProducts}
           trend="Live"
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10">
-        <div className="lg:col-span-8 bg-white p-6 md:p-10 rounded-[32px] md:rounded-[48px] border border-border shadow-2xl shadow-slate-200/20">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-6">
+      {/* Chart + Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Chart */}
+        <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
             <div>
-                <h2 className="text-2xl font-black tracking-tighter uppercase">Revenue Trajectory</h2>
-                <p className="text-xs font-bold text-text-muted uppercase tracking-widest mt-1">Growth analysis over time</p>
+              <h2 className="text-lg font-black text-gray-900 tracking-tight">Revenue Trajectory</h2>
+              <p className="text-xs text-gray-400 font-medium mt-0.5">Weekly growth analysis</p>
             </div>
-            <select className="bg-surface border border-border text-[10px] font-black px-6 py-3.5 rounded-xl outline-none cursor-pointer tracking-widest uppercase hover:border-primary transition-all w-fit shadow-sm">
-              <option>WEEKLY ANALYSIS</option>
-              <option>MONTHLY ANALYSIS</option>
+            <select className="bg-gray-50 border border-gray-200 text-xs font-bold text-gray-700 px-4 py-2 rounded-xl outline-none cursor-pointer hover:border-primary transition-all">
+              <option>Weekly</option>
+              <option>Monthly</option>
             </select>
           </div>
-          <div className="h-[300px] md:h-[400px] w-full">
+          <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#E11D48" stopOpacity={0.15}/>
-                    <stop offset="95%" stopColor="#E11D48" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#E11D48" stopOpacity={0.15} />
+                    <stop offset="95%" stopColor="#E11D48" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
-                <XAxis dataKey="name" stroke="#94A3B8" fontSize={10} fontWeight="800" tickLine={false} axisLine={false} dy={15} />
-                <YAxis stroke="#94A3B8" fontSize={10} fontWeight="800" tickLine={false} axisLine={false} tickFormatter={(val) => `₹${val/1000}k`} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#fff', border: '1px solid #E2E8F0', borderRadius: '20px', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', padding: '15px' }}
-                  itemStyle={{ color: '#E11D48', fontWeight: '900', fontSize: '14px' }}
+                <XAxis dataKey="name" stroke="#CBD5E1" fontSize={11} fontWeight="700" tickLine={false} axisLine={false} dy={8} />
+                <YAxis stroke="#CBD5E1" fontSize={11} fontWeight="700" tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v/1000}k`} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#fff', border: '1px solid #E2E8F0', borderRadius: '12px', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', padding: '12px 16px' }}
+                  itemStyle={{ color: '#E11D48', fontWeight: '700', fontSize: '13px' }}
+                  labelStyle={{ color: '#64748B', fontWeight: '700', fontSize: '11px' }}
                 />
-                <Area type="monotone" dataKey="revenue" stroke="#E11D48" fillOpacity={1} fill="url(#colorRev)" strokeWidth={5} dot={{ r: 6, fill: '#E11D48', strokeWidth: 3, stroke: '#fff' }} activeDot={{ r: 8, strokeWidth: 0 }} />
+                <Area type="monotone" dataKey="revenue" stroke="#E11D48" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" dot={false} activeDot={{ r: 6, fill: '#E11D48', strokeWidth: 0 }} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="lg:col-span-4 bg-white p-6 md:p-10 rounded-[32px] md:rounded-[48px] border border-border shadow-2xl shadow-slate-200/20">
-          <h2 className="text-2xl font-black tracking-tighter mb-8 uppercase">Recent Pulse</h2>
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex gap-5 items-center group cursor-pointer p-3 rounded-2xl hover:bg-surface transition-all border border-transparent hover:border-border shadow-sm hover:shadow-none">
-                <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center shrink-0 border border-primary/5 group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm">
-                  <ShoppingBag size={24} strokeWidth={2.5} />
+        {/* Recent Activity */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <h2 className="text-lg font-black text-gray-900 tracking-tight mb-4">Recent Activity</h2>
+          <div className="space-y-3">
+            {[1,2,3,4,5].map((i) => (
+              <div key={i} className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all group cursor-pointer">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                  <Package size={18} className="text-primary group-hover:text-white transition-colors" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-black text-text-main group-hover:text-primary transition-colors truncate">New Order Confirmed</p>
-                  <p className="text-[10px] text-text-muted font-black uppercase tracking-widest mt-1 truncate">ORD-79{i}22 • 2m ago</p>
+                  <p className="text-sm font-bold text-gray-800 truncate">New Order Confirmed</p>
+                  <p className="text-xs text-gray-400 font-medium mt-0.5">ORD-79{i}22 • {i * 2}m ago</p>
                 </div>
-                <div className="w-10 h-10 flex items-center justify-center bg-surface rounded-xl border border-border text-text-muted group-hover:text-primary group-hover:border-primary/20 transition-all duration-300 shrink-0">
-                    <ArrowUpRight size={20} />
-                </div>
+                <ArrowUpRight size={16} className="text-gray-300 group-hover:text-primary transition-colors shrink-0" />
               </div>
             ))}
           </div>
-          <button className="w-full mt-10 py-5 bg-surface border border-border rounded-2xl text-[10px] font-black tracking-[0.2em] uppercase hover:bg-primary hover:text-white hover:border-primary hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 shadow-sm">
-              View All Activities
+          <button className="w-full mt-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-500 uppercase tracking-widest hover:bg-primary hover:text-white hover:border-primary transition-all duration-300">
+            View All
           </button>
         </div>
       </div>
