@@ -1,13 +1,23 @@
 const asyncHandler = require('express-async-handler');
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
+const PaymentMethod = require('../models/PaymentMethod');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+const getRazorpayInstance = async () => {
+    const method = await PaymentMethod.findOne({ name: 'Razorpay', isEnabled: true });
+    if (!method || !method.config.apiKey || !method.config.apiSecret) {
+        throw new Error('Razorpay is not configured or enabled');
+    }
+    return {
+        instance: new Razorpay({
+            key_id: method.config.apiKey,
+            key_secret: method.config.apiSecret,
+        }),
+        key: method.config.apiKey
+    };
+};
 
 // @desc  Create order
 // @route POST /api/orders
@@ -35,17 +45,22 @@ const createOrder = asyncHandler(async (req, res) => {
 // @route POST /api/orders/razorpay
 const createRazorpayOrder = asyncHandler(async (req, res) => {
     const { amount } = req.body;
+    const { instance, key } = await getRazorpayInstance();
     const options = { amount: Math.round(amount * 100), currency: 'INR', receipt: `receipt_${Date.now()}` };
-    const razorpayOrder = await razorpay.orders.create(options);
-    res.json({ success: true, order: razorpayOrder, key: process.env.RAZORPAY_KEY_ID });
+    const razorpayOrder = await instance.orders.create(options);
+    res.json({ success: true, order: razorpayOrder, key });
 });
 
 // @desc  Verify Razorpay payment
 // @route POST /api/orders/:id/pay
 const verifyPayment = asyncHandler(async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const method = await PaymentMethod.findOne({ name: 'Razorpay' });
+    if (!method || !method.config.apiSecret) {
+        throw new Error('Razorpay secret not found');
+    }
     const body = razorpay_order_id + '|' + razorpay_payment_id;
-    const expectedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET).update(body).digest('hex');
+    const expectedSignature = crypto.createHmac('sha256', method.config.apiSecret).update(body).digest('hex');
     if (expectedSignature !== razorpay_signature) {
         res.status(400); throw new Error('Payment verification failed');
     }

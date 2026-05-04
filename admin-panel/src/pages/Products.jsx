@@ -19,6 +19,7 @@ const Products = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const [formData, setFormData] = useState({
@@ -60,6 +61,36 @@ const Products = () => {
     }
   };
 
+  const handleOpenModal = (product = null) => {
+    if (product) {
+      setEditingProduct(product);
+      setFormData({
+        name: product.name,
+        price: product.price,
+        category: product.category?._id || '',
+        description: product.description,
+        stock: product.stock,
+        brand: product.brand || '',
+        isFeatured: product.isFeatured || false
+      });
+      setPreviewImages(product.images?.map(img => img.url) || []);
+    } else {
+      setEditingProduct(null);
+      setFormData({
+        name: '',
+        price: '',
+        category: '',
+        description: '',
+        stock: '',
+        brand: '',
+        isFeatured: false
+      });
+      setPreviewImages([]);
+    }
+    setSelectedFiles([]);
+    setShowModal(true);
+  };
+
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     setSelectedFiles(prev => [...prev, ...files]);
@@ -70,6 +101,10 @@ const Products = () => {
   };
 
   const removeFile = (index) => {
+    // If it's a new file (selectedFiles matches the index in previewImages AFTER existing images)
+    // This logic is a bit complex if we mix existing and new.
+    // For now, let's just clear all if they want to reset, or just append.
+    // Simpler: Just allow clearing the whole selection.
     setSelectedFiles(prev => prev.filter((_, i) => i !== index));
     setPreviewImages(prev => prev.filter((_, i) => i !== index));
   };
@@ -87,7 +122,7 @@ const Products = () => {
     }
   };
 
-  const handleAddProduct = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -99,19 +134,23 @@ const Products = () => {
             data.append('images', file);
         });
 
-        const res = await axiosInstance.post('/products', data, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        let res;
+        if (editingProduct) {
+            res = await axiosInstance.put(`/products/${editingProduct._id}`, data, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+        } else {
+            res = await axiosInstance.post('/products', data, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+        }
 
         if (res.data.success) {
             setShowModal(false);
-            setFormData({ name: '', price: '', category: '', description: '', stock: '', brand: '', isFeatured: false });
-            setSelectedFiles([]);
-            setPreviewImages([]);
             fetchProducts();
         }
     } catch (err) {
-        alert(err.response?.data?.message || 'Error adding product');
+        alert(err.response?.data?.message || 'Error saving product');
     } finally {
         setLoading(false);
     }
@@ -133,7 +172,7 @@ const Products = () => {
           <p className="text-text-muted font-semibold mt-1">Manage and monitor the core catalog of official merchandise.</p>
         </div>
         <button 
-          onClick={() => setShowModal(true)}
+          onClick={() => handleOpenModal()}
           className="bg-primary text-white px-8 py-3.5 rounded-2xl flex items-center gap-3 text-sm font-black tracking-widest uppercase hover:shadow-xl hover:shadow-primary/20 transition-all active:scale-95"
         >
           <Plus size={20} />
@@ -201,7 +240,10 @@ const Products = () => {
                   </td>
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-3">
-                      <button className="p-3 bg-background border border-border rounded-xl text-text-muted hover:text-primary hover:border-primary transition-all">
+                      <button 
+                        onClick={() => handleOpenModal(product)}
+                        className="p-3 bg-background border border-border rounded-xl text-text-muted hover:text-primary hover:border-primary transition-all"
+                      >
                         <Edit size={18} />
                       </button>
                       <button 
@@ -226,15 +268,15 @@ const Products = () => {
           <div className="relative bg-surface w-full max-w-2xl rounded-[40px] p-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto border-none">
             <div className="flex items-center justify-between mb-10">
                 <div>
-                    <h2 className="text-3xl font-black tracking-tighter">New Registration</h2>
-                    <p className="text-text-muted font-bold mt-1">Populate the fields to add merchandise to the inventory.</p>
+                    <h2 className="text-3xl font-black tracking-tighter">{editingProduct ? 'Edit Product' : 'New Registration'}</h2>
+                    <p className="text-text-muted font-bold mt-1">{editingProduct ? 'Modify the details of this catalog item.' : 'Populate the fields to add merchandise to the inventory.'}</p>
                 </div>
                 <button onClick={() => setShowModal(false)} className="p-3 hover:bg-background rounded-2xl transition-colors">
                     <X size={24} className="text-text-muted" />
                 </button>
             </div>
 
-            <form onSubmit={handleAddProduct} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-8">
               <div className="grid grid-cols-2 gap-6">
                 <div className="col-span-2">
                   <label className="text-xs font-black text-text-muted tracking-widest uppercase block mb-3 ml-1">Official Name</label>
@@ -370,7 +412,7 @@ const Products = () => {
                     ) : (
                       <>
                         <Box size={20} />
-                        Confirm Registry
+                        {editingProduct ? 'Update Registry' : 'Confirm Registry'}
                       </>
                     )}
                 </button>

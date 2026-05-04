@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Category = require('../models/Category');
+const { uploadToCloudinary } = require('../utils/cloudinary');
 
 // @desc  Get all categories
 // @route GET /api/categories
@@ -11,6 +12,12 @@ const getCategories = asyncHandler(async (req, res) => {
 // @desc  Create category (Admin)
 // @route POST /api/categories
 const createCategory = asyncHandler(async (req, res) => {
+    if (req.file) {
+        const result = await uploadToCloudinary(req.file.path, 'categories');
+        if (result) {
+            req.body.image = result.url;
+        }
+    }
     const category = await Category.create(req.body);
     res.status(201).json({ success: true, category });
 });
@@ -18,6 +25,12 @@ const createCategory = asyncHandler(async (req, res) => {
 // @desc  Update category (Admin)
 // @route PUT /api/categories/:id
 const updateCategory = asyncHandler(async (req, res) => {
+    if (req.file) {
+        const result = await uploadToCloudinary(req.file.path, 'categories');
+        if (result) {
+            req.body.image = result.url;
+        }
+    }
     const category = await Category.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!category) { res.status(404); throw new Error('Category not found'); }
     res.json({ success: true, category });

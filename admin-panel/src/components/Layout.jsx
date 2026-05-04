@@ -9,7 +9,9 @@ import {
   Menu,
   Bell,
   Search,
-  Home
+  Home,
+  Tag,
+  CreditCard
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -51,6 +53,8 @@ const Layout = ({ children }) => {
           <SidebarItem icon={LayoutDashboard} label="Dashboard" to="/" />
           <SidebarItem icon={Home} label="CMS Admin" to="/cms" />
           <SidebarItem icon={Package} label="Orders List" to="/orders" />
+          <SidebarItem icon={Tag} label="Categories" to="/categories" />
+          <SidebarItem icon={CreditCard} label="Payments" to="/payments" />
           <SidebarItem icon={ShoppingBag} label="Products" to="/products" />
           <SidebarItem icon={Users} label="Customers" to="/users" />
         </nav>
