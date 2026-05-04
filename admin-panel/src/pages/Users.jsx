@@ -66,64 +66,64 @@ const Users = () => {
   }
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-black tracking-tighter text-text-main">User Registry</h1>
-          <p className="text-text-muted font-semibold mt-1">Manage official customer accounts and permissions.</p>
+          <h1 className="text-5xl font-black tracking-tighter text-text-main">User Registry</h1>
+          <p className="text-text-muted font-bold mt-2 text-lg">Manage official customer accounts and permissions.</p>
         </div>
-        <button className="bg-primary text-white px-8 py-3.5 rounded-2xl flex items-center gap-3 text-sm font-black tracking-widest uppercase hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95">
-          <UserPlus size={20} />
+        <button className="btn-primary px-10 py-5 rounded-[24px] flex items-center gap-4 text-xs font-black tracking-[0.2em] uppercase active:scale-95 shadow-2xl shadow-primary/30">
+          <UserPlus size={22} />
           Invite Associate
         </button>
       </div>
 
-      <div className="grid grid-cols-3 gap-8">
+      <div className="grid grid-cols-3 gap-10">
         {users.map((user) => (
-          <div key={user._id} className="glass p-8 rounded-[32px] group relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-slate-200/50">
-            <div className="absolute top-0 right-0 p-4">
+          <div key={user._id} className="bg-white p-10 rounded-[48px] group relative overflow-hidden transition-all duration-500 border border-border hover:shadow-2xl hover:shadow-slate-200/50 hover:-translate-y-1">
+            <div className="absolute top-4 right-4">
                 <button 
                   onClick={() => deleteUser(user._id)}
-                  className="p-3 bg-red-50 text-primary rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:bg-primary hover:text-white"
+                  className="w-12 h-12 bg-accent-error/5 text-accent-error rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:bg-accent-error hover:text-white flex items-center justify-center border border-accent-error/10"
                 >
-                  <Trash2 size={18} />
+                  <Trash2 size={20} />
                 </button>
             </div>
 
             <div className="flex flex-col items-center text-center">
-              <div className="w-24 h-24 rounded-[32px] gradient-bg p-1 shadow-xl mb-6 group-hover:scale-105 transition-transform">
-                <div className="w-full h-full rounded-[28px] bg-surface flex items-center justify-center">
-                  <span className="text-3xl font-black text-primary">
+              <div className="w-28 h-28 rounded-[40px] gradient-bg p-1 shadow-2xl shadow-primary/20 mb-8 group-hover:scale-105 transition-transform duration-500">
+                <div className="w-full h-full rounded-[36px] bg-white flex items-center justify-center">
+                  <span className="text-4xl font-black text-primary tracking-tighter">
                     {user.name.charAt(0)}
                   </span>
                 </div>
               </div>
 
-              <div className="space-y-2 mb-8 w-full">
-                <h3 className="text-xl font-black text-text-main flex items-center justify-center gap-2">
+              <div className="space-y-3 mb-10 w-full">
+                <h3 className="text-2xl font-black text-text-main flex items-center justify-center gap-3 tracking-tighter">
                   {user.name}
                   {user.role === 'admin' && (
-                    <div className="p-1 bgColor-primary/10 rounded-lg">
-                      <ShieldCheck size={18} className="text-primary" />
+                    <div className="p-1.5 bg-primary/10 rounded-xl">
+                      <ShieldCheck size={20} className="text-primary" />
                     </div>
                   )}
                 </h3>
-                <div className="flex items-center justify-center gap-2 text-text-muted font-bold text-sm bg-background py-1.5 px-4 rounded-xl w-fit mx-auto">
-                  <Mail size={14} className="text-primary" />
+                <div className="flex items-center justify-center gap-3 text-text-muted font-black text-[10px] uppercase tracking-widest bg-surface py-2 px-6 rounded-2xl w-fit mx-auto border border-border">
+                  <Mail size={16} className="text-primary" />
                   {user.email}
                 </div>
-                <div className="flex items-center justify-center gap-2 text-xs text-text-muted font-bold mt-4">
-                  <Calendar size={14} />
+                <div className="flex items-center justify-center gap-2 text-[10px] text-text-muted font-black uppercase tracking-[0.2em] mt-6">
+                  <Calendar size={16} />
                   Joined {new Date(user.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
                 </div>
               </div>
 
               <button 
                 onClick={() => toggleAdmin(user._id, user.role)}
-                className={`w-full py-4 rounded-2xl text-xs font-black tracking-widest uppercase transition-all duration-300 border ${
+                className={`w-full py-5 rounded-[24px] text-[10px] font-black tracking-[0.2em] uppercase transition-all duration-500 border ${
                   user.role === 'admin' 
-                  ? 'bg-background border-border text-text-muted hover:border-primary hover:text-primary' 
-                  : 'bg-primary text-white border-primary hover:shadow-lg shadow-primary/20'
+                  ? 'bg-white border-border text-text-muted hover:border-primary hover:text-primary hover:bg-primary/5' 
+                  : 'bg-primary text-white border-primary shadow-xl shadow-primary/20 hover:scale-[1.02]'
                 }`}
               >
                 {user.role === 'admin' ? 'Revoke Master Access' : 'Elevate to Admin'}
