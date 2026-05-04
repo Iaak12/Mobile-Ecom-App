@@ -11,7 +11,8 @@ import {
   Search,
   Home,
   Tag,
-  CreditCard
+  CreditCard,
+  X
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 

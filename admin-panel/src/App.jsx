@@ -21,13 +21,31 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/admin/login" element={<Navigate to="/login" replace />} />
+        
         <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        
         <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+        <Route path="/admin/orders" element={<Navigate to="/orders" replace />} />
+        
         <Route path="/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
+        <Route path="/admin/products" element={<Navigate to="/products" replace />} />
+        
         <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
+        <Route path="/admin/categories" element={<Navigate to="/categories" replace />} />
+        
         <Route path="/payments" element={<ProtectedRoute><PaymentSettings /></ProtectedRoute>} />
+        <Route path="/admin/payments" element={<Navigate to="/payments" replace />} />
+        
         <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+        <Route path="/admin/users" element={<Navigate to="/users" replace />} />
+        
         <Route path="/cms" element={<ProtectedRoute><HomeManagement /></ProtectedRoute>} />
+        <Route path="/admin/cms" element={<Navigate to="/cms" replace />} />
+
+        {/* Catch-all to prevent blank screens */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
