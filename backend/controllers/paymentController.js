@@ -49,4 +49,15 @@ const togglePaymentMethod = asyncHandler(async (req, res) => {
     res.json({ success: true, method });
 });
 
-module.exports = { getPaymentMethods, updatePaymentMethod, togglePaymentMethod };
+// @desc  Delete payment method (Admin)
+// @route DELETE /api/payments/methods/:id
+const deletePaymentMethod = asyncHandler(async (req, res) => {
+    const method = await PaymentMethod.findByIdAndDelete(req.params.id);
+    if (!method) {
+        res.status(404);
+        throw new Error('Payment method not found');
+    }
+    res.json({ success: true, message: 'Payment method deleted' });
+});
+
+module.exports = { getPaymentMethods, updatePaymentMethod, togglePaymentMethod, deletePaymentMethod };
