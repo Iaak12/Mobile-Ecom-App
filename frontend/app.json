@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "frontend",
+    "name": "The Store",
     "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,22 +15,29 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ayaz.ecommerceapp"
     },
     "android": {
       "package": "com.ayaz.ecommerceapp",
+      "versionCode": 1,
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#E11D48",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
-      }
+      },
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "expo-image-picker"
     ],
     "extra": {
       "apiUrl": "https://mobile-ecom-app.onrender.com/api",
